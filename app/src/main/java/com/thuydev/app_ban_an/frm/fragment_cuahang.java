@@ -34,36 +34,25 @@ public class fragment_cuahang extends Fragment {
     List<ProductDTO>list;
     String TAG = "vvvvvvvvvvv";
     ProductAdapter adapter;
-    static String BASE_URL = "http://10.0.2.2:3000/";
+    ;
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_cuahang, container, false);
 
         recyclerView = view.findViewById(R.id.rcv_cuaHang);
 
         list = new ArrayList<>();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ProductAdapter(getActivity(), list);
+        adapter = new ProductAdapter(getContext(), list);
         recyclerView.setAdapter(adapter);
         getProduct();
         return view;
     }
 
     public void getProduct() {
-        // Tạo Gson converter
-        Gson gson = new GsonBuilder().setLenient().create();
-
-        // Khởi tạo Retrofit
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        // Tạo interface
-        ProductInterface productInterface = retrofit.create(ProductInterface.class);
 
         // Tạo đối tượng Call
-        Call<List<ProductDTO>> call = productInterface.lay_danh_sach();
+        Call<List<ProductDTO>> call = ProductInterface.GETAPI().lay_danh_sach();
 
         // Thực hiện gọi hàm enqueue để lấy dữ liệu
         call.enqueue(new Callback<List<ProductDTO>>() {
