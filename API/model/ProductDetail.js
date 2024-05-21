@@ -3,7 +3,6 @@ const scheme = new db.mongoose.Schema(
     {
         // trường dữ liệu
         IDProduct:{type:String,required:true},
-        IDCategory:{type:String,required:true},
         Size:{type:Array,required:true},
         Date:{type:String,required:true},
         Amount:{type:Number,required:true}

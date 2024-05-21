@@ -1,7 +1,7 @@
 package com.thuydev.app_ban_an.DTO;
 
 public class ProductDTO {
-    String _id,Image,NameProduct;
+    String _id,Image,NameProduct,IDCategory;
     int Price;
 
     @Override
@@ -18,10 +18,10 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
-    public ProductDTO(String _id, String image, String nameProduct, int price) {
-        this._id = _id;
+    public ProductDTO(String image, String nameProduct, String IDCategory, int price) {
         Image = image;
         NameProduct = nameProduct;
+        this.IDCategory = IDCategory;
         Price = price;
     }
 
@@ -55,5 +55,13 @@ public class ProductDTO {
 
     public void setPrice(int price) {
         Price = price;
+    }
+
+    public String getIDCategory() {
+        return IDCategory;
+    }
+
+    public void setIDCategory(String IDCategory) {
+        this.IDCategory = IDCategory;
     }
 }

@@ -2,6 +2,7 @@ const db = require("./db")
 const scheme = new db.mongoose.Schema(
     {
         // trường dữ liệu
+        IDCategory:{type:String,required:true},
         NameProduct:{type:String,required:true},
         Image:{type:String,required:true},
         Price:{type:Number,required:true}
