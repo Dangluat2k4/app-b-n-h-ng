@@ -48,7 +48,7 @@ exports.ThemSanPham = async (req, res, next) => {
             objProduct.NameProduct = NameProduct;
             objProduct.Price = Number(Price);
             objProductDetail.IDProduct = objProduct.id;
-            objProductDetail.IDCategory = IDCategory;
+            objProduct.IDCategory = IDCategory;
             objProductDetail.Size = Size.split(",");
             objProductDetail.Date = Date;
             objProductDetail.Amount = Number(Amount);
@@ -106,7 +106,7 @@ exports.SuaSanPham = async (req, res, next) => {
             objProduct.NameProduct = NameProduct;
             objProduct.Price = Number(Price);
             objProductDetail.IDProduct = objProduct.id;
-            objProductDetail.IDCategory = IDCategory;
+            objProduct.IDCategory = IDCategory;
             objProductDetail.Size = Size.split(",");
             objProductDetail.Date = Date;
             objProductDetail.Amount = Number(Amount);
