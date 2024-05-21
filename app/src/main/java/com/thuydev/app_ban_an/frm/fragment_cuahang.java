@@ -6,18 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.thuydev.app_ban_an.Adapter.CategoryAdapter;
 import com.thuydev.app_ban_an.Adapter.ProductAdapter;
+import com.thuydev.app_ban_an.DTO.CategoryDTO;
 import com.thuydev.app_ban_an.DTO.ProductDTO;
 import com.thuydev.app_ban_an.Interface.ProductInterface;
 import com.thuydev.app_ban_an.R;
+
+import com.thuydev.app_ban_an.databinding.FragmentCuahangBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,55 +25,48 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class fragment_cuahang extends Fragment {
 
     RecyclerView recyclerView;
-    List<ProductDTO>list;
+    List<CategoryDTO>list;
     String TAG = "vvvvvvvvvvv";
-    ProductAdapter adapter;
-    ;
+    CategoryAdapter categoryAdapter;
+    FragmentCuahangBinding binding;
+
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_cuahang, container, false);
+        binding = FragmentCuahangBinding.inflate(getActivity().getLayoutInflater());
+        View view =binding.getRoot()  ;
 
         recyclerView = view.findViewById(R.id.rcv_cuaHang);
 
         list = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ProductAdapter(getContext(), list);
-        recyclerView.setAdapter(adapter);
-        getProduct();
+        categoryAdapter = new CategoryAdapter(getContext(), list);
+        recyclerView.setAdapter(categoryAdapter);
+        getCategory();
         return view;
     }
 
-    public void getProduct() {
+    public void getCategory() {
+       Call<List<CategoryDTO>> call = ProductInterface.GETAPI().GetListCategory();
+       call.enqueue(new Callback<List<CategoryDTO>>() {
+           @Override
+           public void onResponse(Call<List<CategoryDTO>> call, Response<List<CategoryDTO>> response) {
+               if(response.isSuccessful()){
+                   list.clear();
+                   list.addAll(response.body());
+                   categoryAdapter.notifyDataSetChanged();
 
-        // Tạo đối tượng Call
-        Call<List<ProductDTO>> call = ProductInterface.GETAPI().lay_danh_sach();
+               }else Log.e(TAG, "onResponse: "+response.body() );
+           }
 
-        // Thực hiện gọi hàm enqueue để lấy dữ liệu
-        call.enqueue(new Callback<List<ProductDTO>>() {
-            @Override
-            public void onResponse(Call<List<ProductDTO>> call, Response<List<ProductDTO>> response) {
-                if (response.isSuccessful()) {
-                    Log.d(TAG, "onResponse: Lấy dữ liệu thành công " + response.body());
-                    list.clear();
-                    list.addAll(response.body());
-                    adapter.notifyDataSetChanged();
-                } else {
-                    Log.d(TAG, "onResponse: Không lấy được dữ liệu");
-                }
-            }
+           @Override
+           public void onFailure(Call<List<CategoryDTO>> call, Throwable throwable) {
 
-            @Override
-            public void onFailure(Call<List<ProductDTO>> call, Throwable t) {
-                Log.e(TAG, "onFailure: " + t.getMessage());
-                t.printStackTrace();
-            }
-        });
+           }
+       });
     }
 
 
