@@ -1,11 +1,13 @@
 package com.thuydev.app_ban_an.DTO;
 
+import java.util.List;
+
 public class ProductDetailDTO {
     String _id,IDProduct,IDCategory,Date;
     int Amount;
-    String [] Size;
+    List<String> Size;
 
-    public ProductDetailDTO(String _id, String IDProduct, String IDCategory, String date, int amount, String[] size) {
+    public ProductDetailDTO(String _id, String IDProduct, String IDCategory, String date, int amount, List<String> size) {
         this._id = _id;
         this.IDProduct = IDProduct;
         this.IDCategory = IDCategory;
@@ -54,11 +56,11 @@ public class ProductDetailDTO {
         Amount = amount;
     }
 
-    public String[] getSize() {
+    public List<String> getSize() {
         return Size;
     }
 
-    public void setSize(String[] size) {
+    public void setSize(List<String> size) {
         Size = size;
     }
 }
