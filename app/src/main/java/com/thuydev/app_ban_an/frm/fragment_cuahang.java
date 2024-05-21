@@ -50,46 +50,42 @@ public class fragment_cuahang extends Fragment {
     }
 
     public void getProduct() {
-        // tạo coverter
+        // Tạo Gson converter
         Gson gson = new GsonBuilder().setLenient().create();
 
-
-        // Khởi tạo Retrofit Client
+        // Khởi tạo Retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
+
         // Tạo interface
         ProductInterface productInterface = retrofit.create(ProductInterface.class);
 
+        // Tạo đối tượng Call
+        Call<List<ProductDTO>> call = productInterface.lay_danh_sach();
 
-        // ta đối tượng Call
-        Call<List<ProductDTO>> objCall = productInterface.lay_danh_sach();
-        // thực hiện gọi hàm enqeue lấy dữ liệu
-        objCall.enqueue(new Callback<List<ProductDTO>>() {
+        // Thực hiện gọi hàm enqueue để lấy dữ liệu
+        call.enqueue(new Callback<List<ProductDTO>>() {
             @Override
             public void onResponse(Call<List<ProductDTO>> call, Response<List<ProductDTO>> response) {
                 if (response.isSuccessful()) {
-                    Log.d(TAG, "onResponse: lay du lieu thanh cong " + response.body().toString());
-                    // cập nhật vào list và hiển th lên danh sach
+                    Log.d(TAG, "onResponse: Lấy dữ liệu thành công " + response.body());
                     list.clear();
-//                    arrayAdapter =  new ArrayAdapter(MainActivity.this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
-//                    lv_chitieu()
-                    // Thêm dữ liệu mới vào danh sách
                     list.addAll(response.body());
                     adapter.notifyDataSetChanged();
                 } else {
-                    Log.d(TAG, "onResponse: khong lay duoc du lieu");
+                    Log.d(TAG, "onResponse: Không lấy được dữ liệu");
                 }
             }
 
-
             @Override
-            public void onFailure(Call<List<ProductDTO>> call, Throwable throwable) {
-                Log.e(TAG, "onFailure: " + throwable.getMessage());
-                throwable.printStackTrace();// in ra danh sách các file liên quan tới lõi
+            public void onFailure(Call<List<ProductDTO>> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage());
+                t.printStackTrace();
             }
         });
     }
+
 
 }

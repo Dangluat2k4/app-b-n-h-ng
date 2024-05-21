@@ -1,15 +1,20 @@
 package com.thuydev.app_ban_an.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 import com.thuydev.app_ban_an.DTO.ProductDTO;
 import com.thuydev.app_ban_an.R;
 
@@ -40,8 +45,26 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ProductDTO dto = list.get(position);
-        holder.tv_tensp_cuahang.setText("sam pham" + dto.getNameProduct());
-        holder.tv_giasp_cuahang.setText("sam pham" + String.valueOf(dto.getPrice()));
+        if (dto != null){
+            Log.d("ProductAdapter", "Loading image URL: " + dto.getImage());
+            String imageUrl = dto.getImage(); // Assuming getImagePath() returns the relative path of the image
+            Picasso.get().load(imageUrl).into(holder.imv_anh_sp_cuahang, new Callback() {
+                @Override
+                public void onSuccess() {
+                    // Ảnh được tải thành công
+                    Toast.makeText(context, "tải tảnh thành công", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    // Ghi log lỗi
+                    Log.e("Picasso", "Lỗi khi tải ảnh: " + e.getMessage());
+                }
+            });
+
+            holder.tv_tensp_cuahang.setText("sam pham" + dto.getNameProduct());
+            holder.tv_giasp_cuahang.setText("sam pham" + String.valueOf(dto.getPrice()));
+        }
     }
 
 
