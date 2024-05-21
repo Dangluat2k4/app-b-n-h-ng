@@ -56,7 +56,7 @@ exports.Reg = exports.doReg = async (req, res, next)=>{
  }
  exports.XemDanhSachSanPhamTheoLoai =  async (req, res, next) => {
     try {
-     let list = await Product.Product.find({CateID:req.params.id}).sort({ Name: 1 })
+     let list = await Product.Product.find({IDCategory:req.params.id}).sort({ Name: 1 })
      res.status(200).json(list);
     } catch (error) {
      console.log(error)
@@ -79,4 +79,29 @@ exports.Reg = exports.doReg = async (req, res, next)=>{
     res.status(200).json(obj);
 };
 
+exports.XemDanhSachLoai = async (req,res,next)=>{
+    try {
+        let obj = await Category.Category.find()
+        res.status(200).json(obj);
+       } catch (error) {
+        console.log(error)
+        return res.status(400).send(error)
+       }
+ }
 
+ exports.XemSanPhamCT = async (req,res,next)=>{
+    let obj = null;
+    let smg = '';
+    try {
+        
+        obj = await ProductDetail.ProductDetail.findOne({IDProduct:req.params.id  });
+        smg = "Lấy dữ liệu thành công"
+        if(obj==null){
+            smg = "Sản phẩm không tồn tại"
+         return res.status(400).json({  smg: smg });
+        }
+    } catch (error) {
+        smg = error.message;
+    }
+    res.status(200).json(obj);
+ }

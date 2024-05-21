@@ -6,4 +6,8 @@ var multer = require('multer');
 var objUpload = new multer({dest:'./tmp'});
 
 router.get("/product",ctrl.XemDanhSachSanPham)
+router.get("/product/:id",ctrl.XemSanPham)
+router.get("/product/category/:id",ctrl.XemDanhSachSanPhamTheoLoai)
+router.get("/category",ctrl.XemDanhSachLoai)
+router.get("/productdetail/:id",ctrl.XemSanPhamCT)
 module.exports = router;
