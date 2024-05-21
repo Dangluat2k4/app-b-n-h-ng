@@ -1,14 +1,18 @@
 package com.thuydev.app_ban_an.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import com.thuydev.app_ban_an.DTO.ProductDTO;
 import com.thuydev.app_ban_an.R;
@@ -21,9 +25,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
     private final Context context;
     private final List<ProductDTO> list;
-    static String BASE_URL = "http://10.0.2.2:3000/";
-
-    String TAG = "zzzzzzzzzzzz";
 
     public ProductAdapter(Context context, List<ProductDTO> list) {
         this.context = context;
@@ -40,11 +41,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ProductDTO dto = list.get(position);
-        holder.tv_tensp_cuahang.setText("sam pham" + dto.getNameProduct());
-        holder.tv_giasp_cuahang.setText("sam pham" + String.valueOf(dto.getPrice()));
+        if (dto != null){
+           Glide.with(context).load(dto.getImage())
+                   .error(R.drawable.baseline_account_balance_wallet_24)
+                   .into(holder.imv_anh_sp_cuahang);
+            holder.tv_tensp_cuahang.setText("sam pham" + dto.getNameProduct());
+            holder.tv_giasp_cuahang.setText("sam pham" + String.valueOf(dto.getPrice()));
+        }
     }
-
-
     @Override
     public int getItemCount() {
         return list.size();

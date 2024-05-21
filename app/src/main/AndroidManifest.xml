@@ -18,9 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App_Ban_An"
         tools:targetApi="31">
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
+
         <activity
             android:name=".ManHinhKhachHang"
             android:exported="true">
