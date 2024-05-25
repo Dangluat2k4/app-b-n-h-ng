@@ -37,12 +37,15 @@ public interface ProductInterface {
     Call<List<ProductDTO>> GetListProducts();
     @GET("apiuser/product/{id}")
     Call<ProductDTO> GetProduct(@Path("id") String id);
+    @GET("apiuser/productdetail")
+    Call<List<ProductDetailDTO>> GetProductDetails();
     @GET("apiuser/productdetail/{id}")
     Call<ProductDetailDTO> GetProductDetail(@Path("id") String id);
     @GET("apiuser/category")
     Call<List<CategoryDTO>> GetListCategory();
     @GET("apiuser/product/category/{id}")
     Call<List<ProductDTO>> GetListProductToCate(@Path("id")String id);
+
 
 
 }

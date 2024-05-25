@@ -89,6 +89,15 @@ exports.XemDanhSachLoai = async (req,res,next)=>{
        }
  }
 
+ exports.XemDanhSachSPCT = async (req,res,next)=>{
+    try {
+        let obj = await ProductDetail.ProductDetail.find()
+        res.status(200).json(obj);
+       } catch (error) {
+        console.log(error)
+        return res.status(400).send(error)
+       }
+ }
  exports.XemSanPhamCT = async (req,res,next)=>{
     let obj = null;
     let smg = '';
