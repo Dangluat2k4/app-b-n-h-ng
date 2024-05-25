@@ -7,6 +7,10 @@ public class ProductDetailDTO {
     int Amount;
     List<String> Size;
 
+
+    public ProductDetailDTO() {
+    }
+
     public ProductDetailDTO(String _id, String IDProduct, String IDCategory, String date, int amount, List<String> size) {
         this._id = _id;
         this.IDProduct = IDProduct;
