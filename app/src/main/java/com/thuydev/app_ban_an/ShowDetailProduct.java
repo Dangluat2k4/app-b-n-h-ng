@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.thuydev.app_ban_an.Adapter.SizeAdapter;
+
+import com.thuydev.app_ban_an.DTO.CartDTO;
 import com.thuydev.app_ban_an.DTO.ProductDTO;
 import com.thuydev.app_ban_an.DTO.ProductDetailDTO;
 import com.thuydev.app_ban_an.Extentions.Extention;
@@ -31,14 +33,14 @@ public class ShowDetailProduct extends AppCompatActivity {
     List<String> listSize;
     SizeAdapter sizeAdapter;
     int so = 0;
-
+    String id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivitySanphamShowBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
         Intent intent = getIntent();
-        String id = intent.getStringExtra("IDPRODUCT");
+        id = intent.getStringExtra("IDPRODUCT");
         SetUp();
         GetData(id);
         SoluongCongTru();
@@ -58,6 +60,30 @@ public class ShowDetailProduct extends AppCompatActivity {
                     return;
                 }
                 // thực hiện thêm vào giỏ
+                AddCart();
+
+            }
+        });
+    }
+
+    private void AddCart() {
+        CartDTO cartDTO = new CartDTO();
+        // sau nay co dang nhap thay sau
+        cartDTO.setIDUser(ProductInterface.idUser);
+        cartDTO.setIDProduct(id);
+        cartDTO.setSize(sizeAdapter.GetSize());
+        cartDTO.setAmount(so);
+        Call<String> call = ProductInterface.GETAPI().AddCart(cartDTO);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful())
+                    Toast.makeText(ShowDetailProduct.this, response.body(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable throwable) {
+
             }
         });
     }
@@ -101,7 +127,6 @@ public class ShowDetailProduct extends AppCompatActivity {
             }
         });
     }
-
 
     private void SetUp() {
         listSize = new ArrayList<>();
