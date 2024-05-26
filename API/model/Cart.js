@@ -3,7 +3,9 @@ const scheme = new db.mongoose.Schema(
     {
         // trường dữ liệu
         IDUser:{type:String,required:true},
-        IDProduct:{type:String,required:true}
+        IDProduct:{type:String,required:true},
+        Size:{type:String,require:true},
+        Amount:{type:Number,require:true}
     },
     {
         //tên của bảng
