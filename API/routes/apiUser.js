@@ -10,4 +10,5 @@ router.get("/product/:id",ctrl.XemSanPham)
 router.get("/product/category/:id",ctrl.XemDanhSachSanPhamTheoLoai)
 router.get("/category",ctrl.XemDanhSachLoai)
 router.get("/productdetail/:id",ctrl.XemSanPhamCT)
+router.get("/productdetail",ctrl.XemDanhSachSPCT)
 module.exports = router;
