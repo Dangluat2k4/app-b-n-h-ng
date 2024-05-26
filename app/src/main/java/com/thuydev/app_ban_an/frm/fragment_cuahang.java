@@ -27,8 +27,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class fragment_cuahang extends Fragment {
-
-    RecyclerView recyclerView;
     List<CategoryDTO>list;
     String TAG = "vvvvvvvvvvv";
     CategoryAdapter categoryAdapter;
@@ -37,14 +35,11 @@ public class fragment_cuahang extends Fragment {
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentCuahangBinding.inflate(getActivity().getLayoutInflater());
         View view =binding.getRoot()  ;
-
-        recyclerView = view.findViewById(R.id.rcv_cuaHang);
-
         list = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
+        binding.rcvCuaHang.setLayoutManager(layoutManager);
         categoryAdapter = new CategoryAdapter(getContext(), list);
-        recyclerView.setAdapter(categoryAdapter);
+        binding.rcvCuaHang.setAdapter(categoryAdapter);
         getCategory();
         return view;
     }

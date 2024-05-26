@@ -11,4 +11,8 @@ router.get("/product/category/:id",ctrl.XemDanhSachSanPhamTheoLoai)
 router.get("/category",ctrl.XemDanhSachLoai)
 router.get("/productdetail/:id",ctrl.XemSanPhamCT)
 router.get("/productdetail",ctrl.XemDanhSachSPCT)
+router.get("/user/cart/:id",ctrl.DanhSachCart)
+router.post("/user/cart/add",ctrl.ThemCart)
+router.put("/cart/edit/:id",ctrl.SuaCart)
+router.delete("/cart/delete/:id")
 module.exports = router;
