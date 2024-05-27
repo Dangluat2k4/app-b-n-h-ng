@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.thuydev.app_ban_an.databinding.ItemKichcoBinding;
@@ -57,6 +59,9 @@ public class SizeAdapter extends RecyclerView.Adapter<SizeAdapter.ViewHolder>{
         return list.size();
     }
     public String GetSize(){
+        if(i==-1){
+            return null;
+        }
         return list.get(i);
     }
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -55,7 +55,7 @@ public class ShowDetailProduct extends AppCompatActivity {
                     Toast.makeText(ShowDetailProduct.this, "Bạn phải chọn ít nhất 1 sản phẩm ", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (sizeAdapter.GetSize().isEmpty()){
+                if (sizeAdapter.GetSize()==null||sizeAdapter.GetSize().isEmpty()){
                     Toast.makeText(ShowDetailProduct.this, "Hãy chọn kích cỡ", Toast.LENGTH_SHORT).show();
                     return;
                 }
