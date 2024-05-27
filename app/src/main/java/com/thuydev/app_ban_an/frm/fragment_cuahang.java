@@ -35,6 +35,7 @@ public class fragment_cuahang extends Fragment {
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentCuahangBinding.inflate(getActivity().getLayoutInflater());
         View view =binding.getRoot()  ;
+
         list = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.rcvCuaHang.setLayoutManager(layoutManager);

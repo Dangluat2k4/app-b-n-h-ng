@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.thuydev.app_ban_an.Adapter.SizeAdapter;
+
 import com.thuydev.app_ban_an.DTO.CartDTO;
 import com.thuydev.app_ban_an.DTO.ProductDTO;
 import com.thuydev.app_ban_an.DTO.ProductDetailDTO;
@@ -126,6 +127,7 @@ public class ShowDetailProduct extends AppCompatActivity {
             }
         });
     }
+
     private void SetUp() {
         listSize = new ArrayList<>();
         sizeAdapter = new SizeAdapter(this, listSize);
@@ -133,10 +135,12 @@ public class ShowDetailProduct extends AppCompatActivity {
         binding.rcvListco.setLayoutManager(layoutManager);
         binding.rcvListco.setAdapter(sizeAdapter);
     }
+
     private void GetData(String id) {
         GetSp(id);
         GetSpDetail(id);
     }
+
     private void GetSpDetail(String id) {
         Call<ProductDetailDTO> call = ProductInterface.GETAPI().GetProductDetail(id);
         call.enqueue(new Callback<ProductDetailDTO>() {
@@ -156,6 +160,7 @@ public class ShowDetailProduct extends AppCompatActivity {
             }
         });
     }
+
     private void GetSp(String id) {
         Call<ProductDTO> call = ProductInterface.GETAPI().GetProduct(id);
         call.enqueue(new Callback<ProductDTO>() {
@@ -177,6 +182,7 @@ public class ShowDetailProduct extends AppCompatActivity {
             }
         });
     }
+
     private void tinh(String dau) {
         if ("-".equals(dau)) {
             so -= 1;

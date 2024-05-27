@@ -5,6 +5,7 @@ import java.util.Locale;
 
 public class Extention {
     public static String MakeStyleMoney(int price) {
+
         return NumberFormat.getNumberInstance(Locale.getDefault()).format(price);
     }
 }
