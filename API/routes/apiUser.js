@@ -15,4 +15,7 @@ router.get("/user/cart/:id",ctrl.DanhSachCart)
 router.post("/user/cart/add",ctrl.ThemCart)
 router.put("/cart/edit/:id",ctrl.SuaCart)
 router.delete("/cart/delete/:id")
+// đăng nhập, đăng ký
+router.post("/login", ctrl.Login);
+router.post("/Reg", ctrl.Reg);
 module.exports = router;
