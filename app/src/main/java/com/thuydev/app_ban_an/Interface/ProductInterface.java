@@ -2,7 +2,11 @@ package com.thuydev.app_ban_an.Interface;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.thuydev.app_ban_an.Account.Account;
+import com.thuydev.app_ban_an.Account.Accountfeedback;
+import com.thuydev.app_ban_an.DTO.CartDTO;
 import com.thuydev.app_ban_an.DTO.CategoryDTO;
+import com.thuydev.app_ban_an.Account.LoginResponse;
 import com.thuydev.app_ban_an.DTO.ProductDTO;
 import com.thuydev.app_ban_an.DTO.ProductDetailDTO;
 
@@ -60,5 +64,10 @@ public interface ProductInterface {
     @DELETE("apiuser/cart/delete/{id}")
     Call<String> DeleteCart(@Path("id")String id);
 
+ @POST("apiuser/Reg")
+ Call<Accountfeedback> accountfeedback(@Body Account account);
+
+ @POST("apiuser/login")
+ Call<LoginResponse> login(@Body Account account);
 
 }
