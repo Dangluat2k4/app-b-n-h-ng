@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Price</th>
+            <th>Product detail</th>
+            <th>Sửa sản phẩm</th>
+            <th>Xóa sản phẩm </th>
+        </tr>
+        <% listSP.forEach( (row)=>{ %>
+            <tr>
+                <td>
+                    <%= row._id %>
+                </td>
+                <td>
+                    <%= row.NameProduct %>
+                </td>
+                <td>
+                    <%= row.Image %>
+                </td>
+                <td>
+                    <%= row.Price %>
+                </td>
+                <td>
+                    <a href="/apiadmin/product/add/" target="_blank">
+                        thêm sản phẩm
+                    </a>
+                </td>
+                <td>
+                    <a href="/apiadmin/product/edit/<%= row._id %>" target="_blank">
+                        thêm sản phẩm
+                    </a>
+                </td>
+                <td>
+                    <a href="/apiadmin/product/delete/<%= row._id %>"
+                        onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')"><button type="submit" class="btn btn-danger " >Xóa</button></a>
+                </td>
+            </tr>
+            <% }) %>
+    </table>
+
+</body>
+
+</html>

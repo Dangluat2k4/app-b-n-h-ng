@@ -6,8 +6,17 @@ var multer = require('multer');
 var objUpload = new multer({dest:'./tmp'});
 
 router.get("/product",ctrl.XemDanhSachSanPham)
+
+router.get("/product/add", ctrl.ThemSanPham)
 router.post("/product/add",objUpload.single("imgAnh"),ctrl.ThemSanPham)
-router.put("/product/edit/:id",objUpload.single("imgAnh"),ctrl.SuaSanPham)
+
+router.get("/product/edit/:id",ctrl.SuaSanPham)
+router.post("/product/edit/:id",objUpload.single("imgAnh"),ctrl.SuaSanPham)
+
+// router.get("/product/delete/:id", ctrl.Xoa);
+// router.delete("/product/delete/:id", ctrl.Xoa);
+
+router.get("/product/delete/:id", ctrl.XoaSanPham);
 router.delete("/product/delete/:id",objUpload.single("imgAnh"),ctrl.XoaSanPham)
 
 router.get("/category",ctrl.XemLoai)
