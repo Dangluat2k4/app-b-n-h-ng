@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.thuydev.app_ban_an.Account.Account;
 import com.thuydev.app_ban_an.Account.Accountfeedback;
+import com.thuydev.app_ban_an.Account.ChangePasswordRequest;
 import com.thuydev.app_ban_an.DTO.CartDTO;
 import com.thuydev.app_ban_an.DTO.CategoryDTO;
 import com.thuydev.app_ban_an.Account.LoginResponse;
@@ -12,6 +13,7 @@ import com.thuydev.app_ban_an.DTO.ProductDetailDTO;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -69,5 +71,8 @@ public interface ProductInterface {
 
  @POST("apiuser/login")
  Call<LoginResponse> login(@Body Account account);
+
+ @POST("apiuser/changepassword")
+ Call<ResponseBody> changePassword(@Body ChangePasswordRequest request);
 
 }
