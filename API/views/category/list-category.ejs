@@ -13,38 +13,31 @@
         <table border="1" class="table table-bordered border-black ">
             <tr>
                 <th scope="col">ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Image</th>
-                <th scope="col">Price</th>
-                <th scope="col">Product detail</th>
+                <th scope="col">Category</th>
+                <th scope="col">thêm</th>
                 <th scope="col">Sửa sản phẩm</th>
                 <th scope="col">Xóa sản phẩm </th>
             </tr>
-            <% listSP.forEach( (row)=>{ %>
+            <% listCTG.forEach( (row)=>{ %>
                 <tr>
                     <td>
                         <%= row._id %>
                     </td>
                     <td>
-                        <%= row.NameProduct %>
-                    </td>
-                    <td><img src="<%= row.Image%>" width="50"  />
+                        <%= row.NameCategory %>
                     </td>
                     <td>
-                        <%= row.Price %>
-                    </td>
-                    <td>
-                        <a href="/apiadmin/product/add/" target="_blank">
+                        <a href="/apiadmin/category/add" target="_blank">
                             <button type="submit" class="btn btn-success w-100"> Thêm </button>
                         </a>
                     </td>
                     <td>
-                        <a href="/apiadmin/product/edit/<%= row._id %>" target="_blank">
+                        <a href="/apiadmin/category/edit/<%= row._id %>" target="_blank">
                             <button type="submit" class="btn btn-warning w-100 "> Sửa </button>
                         </a>
                     </td>
                     <td>
-                        <a href="/apiadmin/product/delete/<%= row._id %>"
+                        <a href="/apiadmin/category/delete/<%= row._id %>"
                             onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')"><button type="submit"
                                 class="btn btn-danger w-100">Xóa</button></a>
                     </td>

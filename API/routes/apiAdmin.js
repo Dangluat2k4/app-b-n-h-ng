@@ -13,14 +13,21 @@ router.post("/product/add",objUpload.single("imgAnh"),ctrl.ThemSanPham)
 router.get("/product/edit/:id",ctrl.SuaSanPham)
 router.post("/product/edit/:id",objUpload.single("imgAnh"),ctrl.SuaSanPham)
 
-// router.get("/product/delete/:id", ctrl.Xoa);
+
+router.get("/product/add", ctrl.renderAddProductForm);
 // router.delete("/product/delete/:id", ctrl.Xoa);
 
 router.get("/product/delete/:id", ctrl.XoaSanPham);
 router.delete("/product/delete/:id",objUpload.single("imgAnh"),ctrl.XoaSanPham)
 
+router.get("/category", ctrl.getCategory);
 router.get("/category",ctrl.XemLoai)
+router.get("/category/add",ctrl.ThemLoai)
 router.post("/category/add",ctrl.ThemLoai)
-router.put("/category/edit/:id",ctrl.SuaLoai)
-router.delete("/category/edit/:id",ctrl.Xoaloai)
+
+router.get("/category/edit/:id",ctrl.SuaLoai)
+router.post("/category/edit/:id",ctrl.SuaLoai)
+
+router.get("/category/delete/:id",ctrl.Xoaloai)
+router.delete("/category/delete/:id",ctrl.Xoaloai)
 module.exports = router;
