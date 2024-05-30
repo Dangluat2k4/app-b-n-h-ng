@@ -37,6 +37,33 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:hint="Full Name"
+                android:textColorHint="#E6903B"
+                android:padding="10dp"
+                android:textColor="#E6903B"
+                android:searchResultHighlightColor="#E6903B"
+                android:layout_marginTop="10dp"
+                tools:ignore="Autofill,HardcodedText,UnusedAttribute"
+                android:background="@drawable/shape_edittext"
+                android:id="@+id/edt_fullname_dangky"
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="NumberPhone"
+                android:textColorHint="#E6903B"
+                android:padding="10dp"
+                android:textColor="#E6903B"
+                android:searchResultHighlightColor="#E6903B"
+                android:layout_marginTop="10dp"
+                tools:ignore="Autofill,HardcodedText,UnusedAttribute"
+                android:background="@drawable/shape_edittext"
+                android:id="@+id/edt_numberphone_dangky"
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
                 android:hint="Email"
                 android:textColorHint="#E6903B"
                 android:padding="10dp"
@@ -74,6 +101,7 @@
                 android:background="@drawable/shape_edittext"
                 android:id="@+id/edt_rematkhau_dangky"
                 />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

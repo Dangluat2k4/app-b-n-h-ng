@@ -34,7 +34,6 @@ userSchema.methods.generateAuthToken = async function () {
 
 
     const user = this
-    console.log(user)
     const token = jwt.sign({ _id: user._id, Email: user.Email }, chuoi_ky_tu_bi_mat)
     // user.tokens = user.tokens.concat({token}) // code này dành cho nhiều token, ở demo này dùng 1 token
     user.token = token;
@@ -52,7 +51,7 @@ userSchema.methods.generateAuthToken = async function () {
 userSchema.statics.findByCredentials = async (Email, Password) => {
 
 
-    const user = await userModel.findOne({ Email:Email })
+    const user = await Account.findOne({ Email:Email })
     if (!user) {
         throw new Error({ error: 'Không tồn tại user' })
     }

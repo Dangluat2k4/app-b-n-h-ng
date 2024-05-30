@@ -2,8 +2,11 @@ package com.thuydev.app_ban_an.Interface;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.thuydev.app_ban_an.Account.Account;
+import com.thuydev.app_ban_an.Account.Accountfeedback;
 import com.thuydev.app_ban_an.DTO.CartDTO;
 import com.thuydev.app_ban_an.DTO.CategoryDTO;
+import com.thuydev.app_ban_an.Account.LoginResponse;
 import com.thuydev.app_ban_an.DTO.ProductDTO;
 import com.thuydev.app_ban_an.DTO.ProductDetailDTO;
 
@@ -12,6 +15,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -50,6 +54,7 @@ public interface ProductInterface {
     Call<List<CategoryDTO>> GetListCategory();
     @GET("apiuser/product/category/{id}")
     Call<List<ProductDTO>> GetListProductToCate(@Path("id")String id);
+
     @GET("apiuser/user/cart/{id}")
     Call<List<CartDTO>> GetListCarts(@Path("id") String id);
     @POST("apiuser/user/cart/add")
@@ -59,5 +64,10 @@ public interface ProductInterface {
     @DELETE("apiuser/cart/delete/{id}")
     Call<String> DeleteCart(@Path("id")String id);
 
+ @POST("apiuser/Reg")
+ Call<Accountfeedback> accountfeedback(@Body Account account);
+
+ @POST("apiuser/login")
+ Call<LoginResponse> login(@Body Account account);
 
 }

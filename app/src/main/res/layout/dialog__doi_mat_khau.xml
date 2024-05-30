@@ -7,7 +7,7 @@
     android:backgroundTint="@color/white"
     android:orientation="vertical"
     app:cardCornerRadius="10dp"
-    tools:context=".fragment.frg_DoiMatKhau">
+    tools:context=".frm.fragment_doimk_nhanvien">
 
     <LinearLayout
         android:layout_width="match_parent"
