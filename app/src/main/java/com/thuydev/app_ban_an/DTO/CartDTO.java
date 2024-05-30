@@ -26,6 +26,9 @@ public class CartDTO {
         this._id = _id;
     }
 
+    public String getIDUser() {
+        return IDUser;
+    }
 
     public void setIDUser(String IDUser) {
         this.IDUser = IDUser;
