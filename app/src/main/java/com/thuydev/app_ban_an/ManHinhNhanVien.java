@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.thuydev.app_ban_an.frm.fragment_doimk_nhanvien;
 import com.thuydev.app_ban_an.frm.fragment_hotro_nhanvien;
 import com.thuydev.app_ban_an.frm.fragment_quanlygiay_nhanvien;
 import com.thuydev.app_ban_an.frm.fragment_quanlyhoadon_nhanvien;
@@ -55,7 +56,12 @@ public class ManHinhNhanVien extends AppCompatActivity {
                 } else if (item.getItemId() == R.id.menu_nhanvien_hotro) {
                     replaceFragment(new fragment_hotro_nhanvien());
                     getSupportActionBar().setTitle("Hỗ trợ khách hàng");
-                } else {
+                }
+                else if (item.getItemId() == R.id.menu_nhanvien_resetpass) {
+                    replaceFragment(new fragment_doimk_nhanvien());
+                    getSupportActionBar().setTitle("Đổi mật khẩu");
+                }
+                else {
                     Toast.makeText(ManHinhNhanVien.this, "Lỗi", Toast.LENGTH_SHORT).show();
                 }
                 return true;
