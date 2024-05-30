@@ -2,6 +2,7 @@ package com.thuydev.app_ban_an;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ public class ManHinhNhanVien extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        Log.e("TAG", "onCreate: "+DangNhap.account );
         setContentView(R.layout.activity_man_hinh_nhan_vien);
         toolbar = findViewById(R.id.toolbar_nhanvien);
         bottomNavigationView = findViewById(R.id.bnv_NhanVien);

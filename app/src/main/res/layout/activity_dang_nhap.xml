@@ -61,6 +61,16 @@
                 android:id="@+id/edt_matkhau_dangnhap"
 
                 />
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lưu mật khẩu"
+                android:checked="false"
+                android:textColor="#FF9800"
+                android:layout_gravity="start"
+                android:layout_marginLeft="10dp"
+                android:button="@drawable/checkbox"
+                android:id="@+id/cbk_luu"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
