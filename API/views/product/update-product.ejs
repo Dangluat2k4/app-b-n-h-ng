@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Sửa sản phẩm</h1>
+
+    <p>
+        <%= smg %>
+    </p>
+    <form action="" method="post">
+
+        <% if(objDT !=null &&  obj!= null){%>
+            <p class="mt-2">Tên sản phẩm:</p>
+            <input type="text" class="form-control mt-2 " name="NameProduct" value="<%= obj.NameProduct %>"> <br>
+            <p class="mt-2">Giá tiền:</p>
+            <input type="number" class="form-control" name="Price" value="<%= obj.Price %>"> <br>
+            <p class="mt-2">Size :</p>
+            <input type="text" class="form-control" name="Size" value="<%= objDT.Size %>"> <br>
+            <p class="mt-2">Ngày tháng:</p>
+            <input type="text" class="form-control" name="Date" value="<%= objDT.Date %>"> <br>
+            <p class="mt-2">Loại :</p>
+            <input type="text" class="form-control" name="IDCategory" value="<%= obj.IDCategory %>"> <br>
+            <p class="mt-2">Ảnh </p>
+            <input type="text" class="form-control" name="Image" value="<%= obj.Image %>"> <br>
+            <p class="mt-2"> Số lượng :</p>
+            <input type="text" class="form-control" name="Amount" value="<%= objDT.Amount %>"> <br>
+            <button type="submit">Thêm mới</button>
+            <% } %>
+
+    </form>
+
+
+</body>
+
+</html>

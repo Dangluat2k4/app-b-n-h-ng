@@ -18,4 +18,6 @@ router.delete("/cart/delete/:id")
 // đăng nhập, đăng ký
 router.post("/login", ctrl.Login);
 router.post("/Reg", ctrl.Reg);
+
+router.post("/changepassword", ctrl.changePassword);
 module.exports = router;

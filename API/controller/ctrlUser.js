@@ -18,13 +18,14 @@ exports.Login = async (req, res, next) => {
             return res.status(401)
                 .json({ error: 'Sai thông tin đăng nhập' })
         }
+        
         // đăng nhập thành công, tạo token làm việc mới
         const token = await user.generateAuthToken()
         user.token = token;
         return res.status(200).send(user)
     } catch (error) {
-        console.log(error + " Pass" + req.body.Password)
-        return res.status(400).send(error)
+        console.log(error + " Pass " + req.body.Password)
+        return res.status(400).send({error:error,pass: "Sai pass"})
     }
 }
 exports.Reg = exports.doReg = async (req, res, next) => {
@@ -33,6 +34,7 @@ exports.Reg = exports.doReg = async (req, res, next) => {
         const user = new Account(req.body);
         user.Password = await bcrypt.hash(req.body.Password, salt);
         user.FullName = req.body.FullName;
+        user.NumberPhone= "8798798"
         user.Credit = 0;
         user.Status = 1;
         const token = await user.generateAuthToken();
@@ -289,4 +291,30 @@ exports.ThemHoaDon = async (req, res, next) => {
         smg = error.message;
     }
     res.status(400).json({ smg: smg })
+};
+
+exports.changePassword = async (req, res, next) => {
+    try {
+        const { email, newPassword } = req.body;
+
+        // Kiểm tra xem email có tồn tại trong database hay không
+        const user = await Account.findOne({ Email: email });
+
+        if (!user) {
+            return res.status(404).json({ error: 'Email không tồn tại' });
+        }
+
+        // Mã hóa mật khẩu mới
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        // Cập nhật mật khẩu mới vào database
+        user.Password = hashedPassword;
+        await user.save();
+
+        return res.status(200).json({ message: 'Đổi mật khẩu thành công' });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: 'Đã xảy ra lỗi trong quá trình đổi mật khẩu' });
+    }
 };
