@@ -7,7 +7,7 @@
     android:backgroundTint="@color/white"
     android:orientation="vertical"
     app:cardCornerRadius="10dp"
-    tools:context=".fragment.frg_DoiMatKhau">
+    tools:context=".frm.fragment_doimk_nhanvien">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,14 +31,13 @@
                 android:textSize="30dp"
                 android:textStyle="bold"/>
             <EditText
-                android:id="@+id/edt_nhapmkcu"
+                android:id="@+id/edt_nhapmail"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/shape_edittext"
-                android:hint="Nhập mật khẩu cũ"
+                android:hint="Nhập Email"
                 android:padding="10dp"
-                android:inputType="textPassword"
                 android:textColor="#E6903B"
                 android:textColorHint="#E6903B" />
 
@@ -54,17 +53,7 @@
                 android:textColor="#E6903B"
                 android:textColorHint="#E6903B" />
 
-            <EditText
-                android:id="@+id/edt_xacnhanmk"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/shape_edittext"
-                android:hint="Xác nhận mật khẩu"
-                android:padding="10dp"
-                android:textColor="#E6903B"
-                android:inputType="textPassword"
-                android:textColorHint="#E6903B" />
+
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_doiMK"

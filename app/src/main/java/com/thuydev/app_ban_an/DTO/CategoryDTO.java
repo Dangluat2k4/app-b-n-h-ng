@@ -3,6 +3,9 @@ package com.thuydev.app_ban_an.DTO;
 public class CategoryDTO {
     String _id,NameCategory;
 
+    public CategoryDTO() {
+    }
+
     public CategoryDTO(String _id, String nameCategory) {
         this._id = _id;
         NameCategory = nameCategory;

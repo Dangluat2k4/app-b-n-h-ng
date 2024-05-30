@@ -9,10 +9,6 @@
         android:title=""
         android:icon="@drawable/shoppingcart"
         />
-    <item android:id="@+id/menu_khachhang_hotro"
-        android:title=""
-        android:icon="@drawable/agent"
-        />
 
     <item android:id="@+id/menu_khachhang_hoadon"
         android:title=""
