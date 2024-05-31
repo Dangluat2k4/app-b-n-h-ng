@@ -81,6 +81,12 @@ public interface ProductInterface {
  @POST("apiuser/login")
  Call<Account> login(@Body Account account);
 
+
+ @GET("apiuser/Account")
+ Call<List<Account>> GetListAccount();
+ @GET("apiuser/DsBill")
+ Call<List<BillDetail>> GetListxacnhan();
+
  @PUT("apiuser/changepassword")
  Call<ResponseBody> changePassword(@Body ChangePasswordRequest request);
 

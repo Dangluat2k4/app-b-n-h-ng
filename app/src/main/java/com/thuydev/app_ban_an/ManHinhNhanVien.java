@@ -1,6 +1,5 @@
 package com.thuydev.app_ban_an;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,15 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.thuydev.app_ban_an.frm.fragment_doimk_nhanvien;
 import com.thuydev.app_ban_an.frm.fragment_hotro_nhanvien;
 import com.thuydev.app_ban_an.frm.fragment_quanlygiay_nhanvien;
-import com.thuydev.app_ban_an.frm.fragment_quanlyhoadon_nhanvien;
+import com.thuydev.app_ban_an.frm.fragment_xacnhandon;
 
 public class ManHinhNhanVien extends AppCompatActivity {
     Toolbar toolbar;
@@ -53,7 +50,7 @@ public class ManHinhNhanVien extends AppCompatActivity {
                     replaceFragment(quanlygiay_nhanvien);
                     getSupportActionBar().setTitle("Quản Lý Sản Phẩm");
                 } else if (item.getItemId() == R.id.menu_nhanvien_qlhd) {
-                    replaceFragment(new fragment_quanlyhoadon_nhanvien());
+                    replaceFragment(new fragment_xacnhandon());
                     getSupportActionBar().setTitle("Quản Lý Hóa Đơn");
                 } else if (item.getItemId() == R.id.menu_nhanvien_hotro) {
                     replaceFragment(new fragment_hotro_nhanvien());

@@ -8,6 +8,7 @@ const ProductDetail = require("../model/ProductDetail")
 const fs = require('fs');// thư viện sử lý file
 const { Account } = require("../model/Account");
 const bcrypt = require("bcrypt");
+const { Console } = require("console")
 
 //get Acount
 exports.Login = async (req, res, next) => {
@@ -32,6 +33,9 @@ exports.Reg = exports.doReg = async (req, res, next) => {
     try {
         const salt = await bcrypt.genSalt(10);
         const user = new Account(req.body);
+        tempUser = await Account.findOne({Email:user.Email})
+        if(tempUser!=null)
+            return res.status(400).send( "Đã tồn tại tài khoản " )
         user.Password = await bcrypt.hash(req.body.Password, salt);
         user.FullName = req.body.FullName;
         user.NumberPhone= "8798798"
@@ -46,10 +50,45 @@ exports.Reg = exports.doReg = async (req, res, next) => {
     }
     res.status(200).json({ status: 1, msg: 'Trang đăng ký' });
 }
+
+exports.changePassword = async (req, res, next) => {
+    try {
+        const { email, newPassword } = req.body;
+
+        // Kiểm tra xem email có tồn tại trong database hay không
+        const user = await Account.findOne({ Email: email });
+
+        if (!user) {
+            return res.status(404).json({ error: 'Email không tồn tại' });
+        }
+
+        // Mã hóa mật khẩu mới
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        // Cập nhật mật khẩu mới vào database
+        user.Password = hashedPassword;
+        await user.save();
+
+        return res.status(200).json({ message: 'Đổi mật khẩu thành công' });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: 'Đã xảy ra lỗi trong quá trình đổi mật khẩu' });
+    }
+};
 // Product
 exports.XemDanhSachSanPham = async (req, res, next) => {
     try {
         let list = await Product.Product.find().sort({ Name: 1 })
+        res.status(200).json(list);
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send(error)
+    }
+}
+exports.XemDanhSachAccount = async (req, res, next) => {
+    try {
+        let list = await Account.find().sort({ FullName: 1  })
         res.status(200).json(list);
     } catch (error) {
         console.log(error)
@@ -222,7 +261,7 @@ exports.XoaCart = async (req, res, next) => {
         obj = await Cart.Cart.findOne({ _id: req.params.id });
         if (obj == null) {
             smg = "Loại không tồn tại"
-            return res.status(400).json({ smg: smg });
+            return res.status(400).json( smg);
         }
         smg = 'Lấy dữ liệu thành công'
         if (req.method == 'DELETE') {
@@ -233,11 +272,21 @@ exports.XoaCart = async (req, res, next) => {
     } catch (error) {
         smg = "Lỗi: " + error.message;
     }
-    res.status(400).json({ smg: smg });
+    res.status(400).json(smg);
 };
 exports.DanhSachBill = async (req, res, next) => {
     try {
-        let list = await Bill.Bill.find({ UserID: req.params.id }).sort({ Name: 1 })
+        let list = await Bill.Bill.find({ IDUser: req.params.id }).sort({ Name: 1 })
+        console.log(list)
+        res.status(200).json(list);
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send(error)
+    }
+}
+exports.DanhSachBillDetail = async (req,res,next)=>{
+    try {
+        let list = await BillDetail.BillDetail.find({ IDUser: req.params.id }).sort({ Name: 1 })
         res.status(200).json(list);
     } catch (error) {
         console.log(error)
@@ -256,65 +305,64 @@ exports.XemHoaDon = async (req, res, next) => {
     res.status(200).json(obj);
 };
 exports.ThemHoaDon = async (req, res, next) => {
-    let smg = ''
+    let smg = '';
     try {
         if (req.method == "POST") {
-            let { IDUser, IDSeller, IDProduct, Status, Date, Amount } = req.body;
-            if (IDUser == '' || IDSeller == '' || IDProduct == ''
-                || Status == '' || Date == '' || Amount == ''
-            ) {
-                smg = "Không được để trống"
-                return res.status(400).json({ smg: smg })
+            let { IDUser, IDSeller, IDProduct, Status, Date, IDCart } = req.body;
+
+            if (IDUser == '' || IDProduct.length == 0 || Date == '') {
+                smg = "Không được để trống";
+                return res.status(400).json(smg);
             }
-            if (isNaN(Status) || isNaN(Amount)) {
-                smg = "Status và Amount phải là số"
-                return res.status(400).json({ smg: smg })
+
+            if (isNaN(Status)) {
+                smg = "Status và Total phải là số";
+                return res.status(400).json(smg);
             }
-            // đưa đối tượng vào cơ sở dữ liệu
+
             let objBill = new Bill.Bill;
             let objBillDetail = new BillDetail.BillDetail;
             objBill.IDUser = IDUser;
-            objBill.IDSeller = IDSeller;
+            if (IDSeller != '') objBill.IDSeller = IDSeller;
             objBill.IDProduct = IDProduct;
-            objBillDetail.IDUser = IDUser
-            objBillDetail.IDProduct = IDProduct
-            objBillDetail.Status = Number(Status)
-            objBillDetail.Date = Date
-            objBillDetail.Amount = Number(Amount)
+            objBillDetail.IDUser = IDUser;
+            objBillDetail.IDBill = objBill.id;
+            objBillDetail.Status = Number(Status);
+            objBillDetail.Date = Date;
+
+            let tempAmount = 0;
+            let tempPrice = 0;
+            for (let { Amount, Price } of objBill.IDProduct) {
+                tempAmount += Amount;
+                tempPrice += (Price * Amount);
+            }
+
+            objBillDetail.Total = Number(tempPrice);
+            objBillDetail.Amount = Number(tempAmount);
             await objBill.save();
             await objBillDetail.save();
-            smg = 'Thêm thành công'
-            return res.status(200).json(objBill)
+
+            smg = 'Thêm thành công';
+            for (let id of IDCart) {
+                await Cart.Cart.findByIdAndDelete(id);
+            }
+
+            // Lấy danh sách các hóa đơn có status 0
+            let list = await BillDetail.BillDetail.find({ IDUser: IDUser, Status: 0 }).sort({ Date: 1 });
+            return res.status(200).json({ message: smg, bills: list });
         }
     } catch (error) {
         console.log(error.message);
         smg = error.message;
     }
-    res.status(400).json({ smg: smg })
+    res.status(400).json({ smg: smg });
 };
-
-exports.changePassword = async (req, res, next) => {
+exports.DanhSachBillChuaGiao = async (req, res, next) => {
     try {
-        const { email, newPassword } = req.body;
-
-        // Kiểm tra xem email có tồn tại trong database hay không
-        const user = await Account.findOne({ Email: email });
-
-        if (!user) {
-            return res.status(404).json({ error: 'Email không tồn tại' });
-        }
-
-        // Mã hóa mật khẩu mới
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-        // Cập nhật mật khẩu mới vào database
-        user.Password = hashedPassword;
-        await user.save();
-
-        return res.status(200).json({ message: 'Đổi mật khẩu thành công' });
+        let list = await BillDetail.BillDetail.find({  Status: 0 }).sort({ Date: 1 });
+        res.status(200).json(list);
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: 'Đã xảy ra lỗi trong quá trình đổi mật khẩu' });
+        return res.status(400).send(error);
     }
 };
