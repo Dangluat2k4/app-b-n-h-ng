@@ -10,13 +10,16 @@
 
 <body>
     <%- include('../inc/header') %>
-        <table border="1" class="table table-bordered border-black ">
+    <td>
+        <a href="/apiadmin/category/add" target="_blank">
+            <button type="submit" class="btn btn-success w-10"> Thêm </button>
+        </a>
+    </td>
+        <table border="1" class="table table-bordered border-black w-100 ">
             <tr>
                 <th scope="col">ID</th>
-                <th scope="col">Category</th>
-                <th scope="col">thêm</th>
-                <th scope="col">Sửa sản phẩm</th>
-                <th scope="col">Xóa sản phẩm </th>
+                <th scope="col">Category</th> 
+                <th scope="col">Action</th>
             </tr>
             <% listCTG.forEach( (row)=>{ %>
                 <tr>
@@ -26,20 +29,17 @@
                     <td>
                         <%= row.NameCategory %>
                     </td>
-                    <td>
-                        <a href="/apiadmin/category/add" target="_blank">
-                            <button type="submit" class="btn btn-success w-100"> Thêm </button>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="/apiadmin/category/edit/<%= row._id %>" target="_blank">
-                            <button type="submit" class="btn btn-warning w-100 "> Sửa </button>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="/apiadmin/category/delete/<%= row._id %>"
-                            onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')"><button type="submit"
-                                class="btn btn-danger w-100">Xóa</button></a>
+
+                    <td class="text-center">
+                        <div class="btn-group" role="group">
+                            <a href="/apiadmin/category/edit/<%= row._id %>" target="_blank">
+                                <button type="submit" class="btn btn-warning w-100 "> Sửa </button>
+                            </a>
+                            <a href="/apiadmin/category/delete/<%= row._id %>"
+                                onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')"><button type="submit"
+                                    class="btn btn-danger w-100">Xóa</button></a>
+                        </div>
+
                     </td>
                 </tr>
                 <% }) %>

@@ -25,6 +25,13 @@ exports.ThemSanPham = async (req, res, next) => {
     try {
         if (req.method == "POST") {
             let { NameProduct, Price, Size, Date, IDCategory, Image, Amount } = req.body;
+            NameProduct = NameProduct.trim();
+            Price = Price.trim();
+            Size = Size.trim();
+            Date = Date.trim();
+            IDCategory = IDCategory.trim();
+            Image = Image.trim();
+            Amount = Amount.trim();
             if (NameProduct == '' || Price == '' || Size == '' || Date == '' || IDCategory == "" || Image == "" || Amount == "") {
                 smg = "Không được để trống"
                 return res.status(400).json({ smg: smg })
@@ -33,7 +40,16 @@ exports.ThemSanPham = async (req, res, next) => {
                 smg = "Giá phải là số"
                 return res.status(400).json({ smg: smg })
             }
-
+            if (isNaN(Amount)) {
+                smg = "Số lượng phải là số"
+                return res.status(400).json({ smg: smg })
+            }
+            // Validate the date using regex
+            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+            if (!dateRegex.test(Date)) {
+                smg = "Ngày không hợp lệ, định dạng phải là YYYY-MM-DD";
+                return res.status(400).json({ smg: smg });
+            }
             let objProduct = new Product.Product;
             let objProductDetail = new ProductDetail.ProductDetail;
 
@@ -86,11 +102,17 @@ exports.SuaSanPham = async (req, res, next) => {
     try {
         obj = await Product.Product.findOne({ _id: req.params.id });
         objDT = await ProductDetail.ProductDetail.findOne({ IDProduct: req.params.id });
-        smg = 'Lấy dữ liệu thành công !!!'
         console.log(req.query);
         if (req.method == "POST") {
             //console.log(req.query);
             let { NameProduct, Price, Size, Date, IDCategory, Image, Amount } = req.body;
+            NameProduct = NameProduct.trim();
+            Price = Price.trim();
+            Size = Size.trim();
+            Date = Date.trim();
+            IDCategory = IDCategory.trim();
+            Image = Image.trim();
+            Amount = Amount.trim();
             if (NameProduct == '' || Price == '' || IDCategory == "" || Image == "") {
                 smg = "Không được để trống"
                 return res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
@@ -103,6 +125,19 @@ exports.SuaSanPham = async (req, res, next) => {
                 smg = "Giá phải là số"
                 return res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
             }
+
+            if (isNaN(Amount)) {
+                smg = "Số lượng phải là số"
+                return res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
+            }
+
+            // Validate the date using regex
+            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+            if (!dateRegex.test(Date)) {
+                smg = "Ngày không hợp lệ, định dạng phải là YYYY-MM-DD";
+                return res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
+            }
+
             let objProduct = {};
             let objProductDetail = {};
             if (req.file != undefined) {
@@ -240,6 +275,7 @@ exports.ThemLoai = async (req, res, next) => {
     try {
         if (req.method == "POST") {
             let { NameCategory } = req.body;
+            NameCategory = NameCategory.trim();
             if (NameCategory == '') {
                 smg = "Không được để trống"
                 return res.status(400).json({ smg: smg })
@@ -272,6 +308,7 @@ exports.SuaLoai = async (req, res, next) => {
         }
         if (req.method == "POST") {
             let { NameCategory } = req.body;
+            NameCategory = NameCategory.trim();
             if (NameCategory == '') {
                 smg = "Không được để trống"
                 return res.status(400).json({ smg: smg })
@@ -301,7 +338,6 @@ exports.Xoaloai = async (req, res, next) => {
 
         await Category.Category.findByIdAndDelete(req.params.id);
         smg = 'Xóa thành công'
-
         res.render('category/delete-category');
     } catch (error) {
         smg = "Lỗi: " + error.message;
