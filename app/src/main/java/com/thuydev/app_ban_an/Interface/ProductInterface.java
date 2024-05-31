@@ -5,12 +5,15 @@ import com.google.gson.GsonBuilder;
 import com.thuydev.app_ban_an.Account.Account;
 import com.thuydev.app_ban_an.Account.Accountfeedback;
 import com.thuydev.app_ban_an.Account.ChangePasswordRequest;
+import com.thuydev.app_ban_an.DTO.Bill;
+import com.thuydev.app_ban_an.DTO.BillDetail;
 import com.thuydev.app_ban_an.DTO.CartDTO;
 import com.thuydev.app_ban_an.DTO.CategoryDTO;
 import com.thuydev.app_ban_an.Account.LoginResponse;
 import com.thuydev.app_ban_an.DTO.ProductDTO;
 import com.thuydev.app_ban_an.DTO.ProductDetailDTO;
 
+import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -65,14 +68,20 @@ public interface ProductInterface {
     Call<String> EditCart(@Path("id")String id);
     @DELETE("apiuser/cart/delete/{id}")
     Call<String> DeleteCart(@Path("id")String id);
+    @POST("apiuser/bill/add")
+    Call<String> AddBill(@Body HashMap<String,Object> Data);
+    @GET("apiuser/user/bill/{id}")
+    Call<List<Bill>> GetBills(@Path("id")String id);
+ @GET("apiuser/user/billdetail/{id}")
+ Call<List<BillDetail>> GetBillDetails(@Path("id")String id);
 
  @POST("apiuser/Reg")
  Call<Accountfeedback> accountfeedback(@Body Account account);
 
  @POST("apiuser/login")
- Call<LoginResponse> login(@Body Account account);
+ Call<Account> login(@Body Account account);
 
- @POST("apiuser/changepassword")
+ @PUT("apiuser/changepassword")
  Call<ResponseBody> changePassword(@Body ChangePasswordRequest request);
 
 }
