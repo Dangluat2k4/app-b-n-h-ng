@@ -25,13 +25,6 @@ exports.ThemSanPham = async (req, res, next) => {
     try {
         if (req.method == "POST") {
             let { NameProduct, Price, Size, Date, IDCategory, Image, Amount } = req.body;
-            NameProduct = NameProduct.trim();
-            Price = Price.trim();
-            Size = Size.trim();
-            Date = Date.trim();
-            IDCategory = IDCategory.trim();
-            Image = Image.trim();
-            Amount = Amount.trim();
             if (NameProduct == '' || Price == '' || Size == '' || Date == '' || IDCategory == "" || Image == "" || Amount == "") {
                 smg = "Không được để trống"
                 return res.status(400).json({ smg: smg })
@@ -83,7 +76,8 @@ exports.ThemSanPham = async (req, res, next) => {
             await objProduct.save();
             await objProductDetail.save();
             smg = 'Thêm thành công, id mới = ' + objProduct._id
-            return res.status(200).json({ smg: smg })
+            return res.redirect('/apiAdmin/product');
+       //     return res.status(200).json({ smg: smg })
         }
     } catch (error) {
         console.log(error.message);
@@ -106,13 +100,6 @@ exports.SuaSanPham = async (req, res, next) => {
         if (req.method == "POST") {
             //console.log(req.query);
             let { NameProduct, Price, Size, Date, IDCategory, Image, Amount } = req.body;
-            NameProduct = NameProduct.trim();
-            Price = Price.trim();
-            Size = Size.trim();
-            Date = Date.trim();
-            IDCategory = IDCategory.trim();
-            Image = Image.trim();
-            Amount = Amount.trim();
             if (NameProduct == '' || Price == '' || IDCategory == "" || Image == "") {
                 smg = "Không được để trống"
                 return res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
@@ -167,9 +154,8 @@ exports.SuaSanPham = async (req, res, next) => {
             await Product.Product.findByIdAndUpdate(req.params.id, objProduct);
             await ProductDetail.ProductDetail.updateOne({ IDProduct: req.params.id }, objProductDetail);
             smg = 'Sửa thành công, id mới = ' + objProduct._id
-            //return res.status(200).json({ smg: smg })
 
-            res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
+            return res.redirect('/apiAdmin/product');
         }
         else {
             res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
@@ -203,8 +189,7 @@ exports.XoaSanPham = async (req, res, next) => {
         await Product.Product.findByIdAndDelete(req.params.id);
         await ProductDetail.ProductDetail.deleteOne({ IDProduct: req.params.id });
         smg = 'Xóa thành công';
-
-        res.render('product/delete-product');
+        return res.redirect('/apiAdmin/product');
     } catch (error) {
         smg = "Lỗi: " + error.message;
         return res.status(500).json({ message: smg });
@@ -274,6 +259,7 @@ exports.ThemLoai = async (req, res, next) => {
     let smg = ''
     try {
         if (req.method == "POST") {
+            console.log(req.body)
             let { NameCategory } = req.body;
             NameCategory = NameCategory.trim();
             if (NameCategory == '') {
@@ -288,7 +274,7 @@ exports.ThemLoai = async (req, res, next) => {
 
             await objCate.save();
             smg = 'Thêm thành công'
-            return res.status(200).json({ smg: smg })
+            return res.redirect('/apiAdmin/category');
         }
     } catch (error) {
         console.log(error.message);
@@ -317,6 +303,7 @@ exports.SuaLoai = async (req, res, next) => {
             objCate.NameCategory = NameCategory;
             await Category.Category.findByIdAndUpdate(req.params.id, objCate);
             smg = 'Sửa thành công'
+            return res.redirect('/apiAdmin/category');
         }
         // return res.status(200).json({ smg: smg, obj: obj });
 
@@ -338,7 +325,7 @@ exports.Xoaloai = async (req, res, next) => {
 
         await Category.Category.findByIdAndDelete(req.params.id);
         smg = 'Xóa thành công'
-        res.render('category/delete-category');
+        return res.redirect('/apiAdmin/category')
     } catch (error) {
         smg = "Lỗi: " + error.message;
     }

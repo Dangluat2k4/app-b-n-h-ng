@@ -4,6 +4,7 @@ var ctrl = require("../controller/ctrlAdmin")
 var mdw = require('../midleware/api_authen');
 var multer = require('multer');
 var objUpload = new multer({dest:'./tmp'});
+;
 
 router.get("/product",ctrl.XemDanhSachSanPham)
 
@@ -30,4 +31,7 @@ router.post("/category/edit/:id",ctrl.SuaLoai)
 
 router.get("/category/delete/:id",ctrl.Xoaloai)
 router.delete("/category/delete/:id",ctrl.Xoaloai)
+
+
+
 module.exports = router;
