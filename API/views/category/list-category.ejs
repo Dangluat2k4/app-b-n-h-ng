@@ -11,7 +11,7 @@
 <body>
     <%- include('../inc/header') %>
     <td>
-        <a href="/apiadmin/category/add" target="_blank">
+        <a href="/apiadmin/category/add">
             <button type="submit" class="btn btn-success w-10"> Thêm </button>
         </a>
     </td>
@@ -32,11 +32,11 @@
 
                     <td class="text-center">
                         <div class="btn-group" role="group">
-                            <a href="/apiadmin/category/edit/<%= row._id %>" target="_blank">
-                                <button type="submit" class="btn btn-warning w-100 "> Sửa </button>
+                            <a href="/apiadmin/category/edit/<%= row._id %>">
+                                <button type="submit" class="btn btn-warning w-100 " style="margin-right: 10px;"> Sửa </button>
                             </a>
                             <a href="/apiadmin/category/delete/<%= row._id %>"
-                                onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')"><button type="submit"
+                                onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')" style="margin-left: 10px;"><button type="submit"
                                     class="btn btn-danger w-100">Xóa</button></a>
                         </div>
 
