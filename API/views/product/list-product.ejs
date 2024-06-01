@@ -10,44 +10,52 @@
 
 <body>
     <%- include('../inc/header') %>
-    <td>
-        <a href="/apiadmin/product/add/" target="_blank">
-            <button type="submit" class="btn btn-success w-30">Add new Product </button>
-        </a>
-    </td>
-    <table border="1" class="table table-bordered border-black w-100">
-        <thead>
-            <tr>
-                <th scope="col" style="width: 10%;">ID</th>
-                <th scope="col" style="width: 10%;">Name</th>
-                <th scope="col" style="width: 10%;">Image</th>
-                <th scope="col" style="width: 10%;">Price</th>
-                <th scope="col" style="width: 10%;">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% listSP.forEach((row) => { %>
+        <td>
+            <a href="/apiadmin/product/add/">
+                <button  type="submit" class="btn btn-success w-30">Add new Product </button>
+            </a>
+        </td>
+        <table border="1" class="table table-bordered border-black w-100">
+            <thead>
                 <tr>
-                    <td><%= row._id %></td>
-                    <td><%= row.NameProduct %></td>
-                    <td class="text-center"><img src="<%= row.Image %>" width="100%" /></td>
-                    <td><%= row.Price %></td>
-                    <td class="text-center">
-                        <div class="btn-group" role="group">
-                            <a href="/apiadmin/product/edit/<%= row._id %>" target="_blank">
-                                <button type="submit" class="btn btn-warning w-100">Sửa</button>
-                            </a>
-                            <a href="/apiadmin/product/delete/<%= row._id %>"
-                                onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
-                                <button type="submit" class="btn btn-danger w-100">Xóa</button>
-                            </a>
-                        </div>
-                    </td>
+                    <th scope="col" style="width: 10%;">ID</th>
+                    <th scope="col" style="width: 10%;">Name</th>
+                    <th scope="col" style="width: 10%;">Image</th>
+                    <th scope="col" style="width: 10%;">Price</th>
+                    <th scope="col" style="width: 10%;">Action</th>
                 </tr>
-            <% }) %>
-        </tbody>
-    </table>
-    <%- include('../inc/footer') %>
+            </thead>
+            <tbody>
+                <% listSP.forEach((row)=> { %>
+                    <tr>
+                        <td>
+                            <%= row._id %>
+                        </td>
+                        <td>
+                            <%= row.NameProduct %>
+                        </td>
+                        <td class="text-center"><img src="<%= row.Image %>" width="100%" /></td>
+                        <td>
+                            <%= row.Price %>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group">
+
+                                <a href="/apiadmin/product/edit/<%= row._id %>">
+                                    <button type="submit" class="btn btn-warning w-100 m-10" style="margin-right: 10px;">Sửa</button>
+                                </a>
+                                
+                                <a href="/apiadmin/product/delete/<%= row._id %>"
+                                    onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
+                                    <button type="submit" class="btn btn-danger w-100"  style="margin-left: 10px;">Xóa</button>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+        <%- include('../inc/footer') %>
 </body>
 
 </html>
