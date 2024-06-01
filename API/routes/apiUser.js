@@ -18,6 +18,7 @@ router.delete("/cart/delete/:id",ctrl.XoaCart)
 router.post("/bill/add",ctrl.ThemHoaDon)
 router.get("/user/bill/:id",ctrl.DanhSachBill)
 router.get("/user/billdetail/:id",ctrl.DanhSachBillDetail)
+router.delete("/user/bill/delete/:id",ctrl.XoaBill)
 
 router.post("/login", ctrl.Login);
 router.post("/Reg", ctrl.Reg);

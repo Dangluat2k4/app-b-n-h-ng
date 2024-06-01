@@ -48,7 +48,7 @@ String idUser = "";
         idUser = DangNhap.account.get_id();
         billList = new ArrayList<>();
         billDetails = new ArrayList<>();
-        billAdapter = new BillAdapter(billList,billDetails,getContext());
+        billAdapter = new BillAdapter(billList,billDetails,getContext(),this);
         binding.rcvQuanLyHoaDon.setAdapter(billAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         binding.rcvQuanLyHoaDon.setLayoutManager(layoutManager);

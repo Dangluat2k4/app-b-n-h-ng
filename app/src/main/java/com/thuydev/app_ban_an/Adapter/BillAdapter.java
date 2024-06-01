@@ -1,23 +1,30 @@
 package com.thuydev.app_ban_an.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.thuydev.app_ban_an.DTO.Bill;
 import com.thuydev.app_ban_an.DTO.BillDetail;
+import com.thuydev.app_ban_an.Interface.ProductInterface;
 import com.thuydev.app_ban_an.databinding.ItemChodonBinding;
+import com.thuydev.app_ban_an.frm.fragment_hoadon;
 
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 
@@ -25,11 +32,12 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
     List<Bill> billList;
     List<BillDetail> billDetails;
     Context context;
-
-    public BillAdapter(List<Bill> billList, List<BillDetail> billDetails, Context context) {
+    fragment_hoadon fragmentHoadon;
+    public BillAdapter(List<Bill> billList, List<BillDetail> billDetails, Context context, fragment_hoadon fragmentHoadon) {
         this.billList = billList;
         this.billDetails = billDetails;
         this.context = context;
+        this.fragmentHoadon = fragmentHoadon;
     }
 
     @NonNull
@@ -39,6 +47,7 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
         return new ViewHolder(binding.getRoot());
     }
 
+    @SuppressLint("RecyclerView")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String Xanh = "#44cc00";
@@ -67,6 +76,28 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
         } else {
             holder.trangthai.setText("Lỗi");
         }
+        holder.xoa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Xoa(billList.get(position).get_id());
+            }
+        });
+    }
+
+    private void Xoa(String id) {
+        Call<String> call = ProductInterface.GETAPI().DeleteBill(id);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if(response.isSuccessful()) Toast.makeText(context, response.body(), Toast.LENGTH_SHORT).show();
+                fragmentHoadon.GetBill();
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable throwable) {
+
+            }
+        });
     }
 
     private BillDetail GetBillDetail(String id) {

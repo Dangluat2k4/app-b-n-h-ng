@@ -268,7 +268,6 @@ exports.XoaCart = async (req, res, next) => {
 exports.DanhSachBill = async (req, res, next) => {
     try {
         let list = await Bill.Bill.find({ IDUser: req.params.id }).sort({ Name: 1 })
-        console.log(list)
         res.status(200).json(list);
     } catch (error) {
         console.log(error)
@@ -344,4 +343,24 @@ exports.ThemHoaDon = async (req, res, next) => {
         smg = error.message;
     }
     res.status(400).json(smg)
+};
+exports.XoaBill = async (req, res, next) => {
+    let smg = '';
+    try {
+        obj = await Bill.Bill.findOne({ _id: req.params.id });
+        if (obj == null) {
+            smg = "Loại không tồn tại"
+            return res.status(400).json( smg);
+        }
+        smg = 'Lấy dữ liệu thành công'
+        if (req.method == 'DELETE') {
+            await Bill.Bill.findByIdAndDelete(req.params.id);
+            await BillDetail.BillDetail.findOneAndDelete({IDBill:req.params.id});
+            smg = 'Xóa thành công'
+        }
+        return res.status(200).json(smg);
+    } catch (error) {
+        smg = "Lỗi: " + error.message;
+    }
+    res.status(400).json(smg);
 };

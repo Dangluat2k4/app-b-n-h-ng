@@ -72,8 +72,10 @@ public interface ProductInterface {
     Call<String> AddBill(@Body HashMap<String,Object> Data);
     @GET("apiuser/user/bill/{id}")
     Call<List<Bill>> GetBills(@Path("id")String id);
- @GET("apiuser/user/billdetail/{id}")
- Call<List<BillDetail>> GetBillDetails(@Path("id")String id);
+    @GET("apiuser/user/billdetail/{id}")
+    Call<List<BillDetail>> GetBillDetails(@Path("id")String id);
+    @DELETE("apiuser/user/bill/delete/{id}")
+    Call<String> DeleteBill(@Path("id")String id);
 
  @POST("apiuser/Reg")
  Call<Accountfeedback> accountfeedback(@Body Account account);
