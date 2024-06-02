@@ -5,6 +5,9 @@ var mdw = require('../midleware/api_authen');
 var multer = require('multer');
 var objUpload = new multer({dest:'./tmp'});
 
+router.get("/Account",ctrl.XemDanhSachAccount)
+router.get("/DsBill",ctrl.DanhSachBillChuaGiao)
+
 router.get("/product",ctrl.XemDanhSachSanPham)
 router.get("/product/:id",ctrl.XemSanPham)
 router.get("/product/category/:id",ctrl.XemDanhSachSanPhamTheoLoai)
@@ -19,6 +22,10 @@ router.post("/bill/add",ctrl.ThemHoaDon)
 router.get("/user/bill/:id",ctrl.DanhSachBill)
 router.get("/user/billdetail/:id",ctrl.DanhSachBillDetail)
 router.delete("/user/bill/delete/:id",ctrl.XoaBill)
+
+router.put('/xoahoadon/:id', ctrl.Xoahoadon);
+router.put('/chapnhanhoadon/:id', ctrl.chapnhanhoadon);
+
 
 router.post("/login", ctrl.Login);
 router.post("/Reg", ctrl.Reg);

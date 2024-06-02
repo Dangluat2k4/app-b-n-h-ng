@@ -25,10 +25,37 @@ exports.ThemSanPham = async (req, res, next) => {
     try {
         if (req.method == "POST") {
             let { NameProduct, Price, Size, Date, IDCategory, Image, Amount } = req.body;
-            if (NameProduct == '' || Price == '' || Size == '' || Date == '' || IDCategory == "" || Image == "" || Amount == "") {
-                smg = "Không được để trống"
-                return res.status(400).json({ smg: smg })
+            if (!NameProduct || NameProduct.trim() === '') {
+                return res.status(400).json({ smg: "Tên sản phẩm không được để trống" });
             }
+        
+            if (!Price || Price.trim() === '') {
+                return res.status(400).json({ smg: "Giá sản phẩm không được để trống" });
+            }
+        
+            if (!Size || Size.trim() === '') {
+                return res.status(400).json({ smg: "Kích thước sản phẩm không được để trống" });
+            }
+        
+            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+            if (!Date || Date.trim() === '') {
+                return res.status(400).json({ smg: "Ngày không được để trống" });
+            } else if (!dateRegex.test(Date)) {
+                return res.status(400).json({ smg: "Ngày không đúng định dạng yyyy-mm-dd" });
+            }
+        
+            if (!IDCategory || IDCategory.trim() === '') {
+                return res.status(400).json({ smg: "Danh mục sản phẩm không được để trống" });
+            }
+        
+            if (!Image || Image.trim() === '') {
+                return res.status(400).json({ smg: "Hình ảnh sản phẩm không được để trống" });
+            }
+        
+            if (!Amount || Amount.trim() === '') {
+                return res.status(400).json({ smg: "Số lượng sản phẩm không được để trống" });
+            }
+        
             if (isNaN(Price)) {
                 smg = "Giá phải là số"
                 return res.status(400).json({ smg: smg })
@@ -38,11 +65,7 @@ exports.ThemSanPham = async (req, res, next) => {
                 return res.status(400).json({ smg: smg })
             }
             // Validate the date using regex
-            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-            if (!dateRegex.test(Date)) {
-                smg = "Ngày không hợp lệ, định dạng phải là YYYY-MM-DD";
-                return res.status(400).json({ smg: smg });
-            }
+            
             let objProduct = new Product.Product;
             let objProductDetail = new ProductDetail.ProductDetail;
 
