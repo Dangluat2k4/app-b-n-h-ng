@@ -47,11 +47,6 @@ exports.ThemSanPham = async (req, res, next) => {
             if (!IDCategory || IDCategory.trim() === '') {
                 return res.status(400).json({ smg: "Danh mục sản phẩm không được để trống" });
             }
-        
-            if (!Image || Image.trim() === '') {
-                return res.status(400).json({ smg: "Hình ảnh sản phẩm không được để trống" });
-            }
-        
             if (!Amount || Amount.trim() === '') {
                 return res.status(400).json({ smg: "Số lượng sản phẩm không được để trống" });
             }
@@ -82,7 +77,7 @@ exports.ThemSanPham = async (req, res, next) => {
                 fs.renameSync(req.file.path, file_path);
                 objProduct.Image = '/uploads/' + req.file.originalname;
             } else {
-                smg = 'Tập tin không tồn tại';
+                smg = 'ảnh không được trống ';
                 return res.status(400).json({ smg: smg });
             }
 
@@ -123,16 +118,38 @@ exports.SuaSanPham = async (req, res, next) => {
         if (req.method == "POST") {
             //console.log(req.query);
             let { NameProduct, Price, Size, Date, IDCategory, Image, Amount } = req.body;
-            if (NameProduct == '' || Price == '' || IDCategory == "" || Image == "") {
-                smg = "Không được để trống"
+            // if (NameProduct == '' || Price == '' || IDCategory == "" || Image == "") {
+            //     smg = "Không được để trống"
+            //     return res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
+            // }
+
+
+            if (!NameProduct || NameProduct.trim() === '') {
+                smg= "Tên sản phẩm không được để trống"
                 return res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
             }
-            if (Size == '', Date == '' || Amount == "") {
+        
+            if (!Price || Price.trim() === '') {
+                smg= "Giá sản phẩm không được để trống" 
+                return res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
+            }
+        
+            if (!Size || Size.trim() === '') {
+                smg = "Kích thước sản phẩm không được để trống"
+                return res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
+            }
+
+            if (Date == '' || Amount == "") {
+                smg = "ngày và số lượng không được bỏ trống "
                 return res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
             }
             console.log(Price);
             if (isNaN(Price)) {
                 smg = "Giá phải là số"
+                return res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
+            }
+            if (isNaN(Size)) {
+                smg = "Kích thước phải là số"
                 return res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
             }
 
