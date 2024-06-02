@@ -35,7 +35,7 @@ public class ManHinhNhanVien extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        Log.e("TAG", "onCreate: "+DangNhap.account );
+        Log.e("TAG", "onCreate: "+DangNhap.dangNhap.account );
         setContentView(R.layout.activity_man_hinh_nhan_vien);
         toolbar = findViewById(R.id.toolbar_nhanvien);
         bottomNavigationView = findViewById(R.id.bnv_NhanVien);

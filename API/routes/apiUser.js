@@ -22,4 +22,5 @@ router.get("/user/billdetail/:id",ctrl.DanhSachBillDetail)
 router.post("/login", ctrl.Login);
 router.post("/Reg", ctrl.Reg);
 router.put("/changepassword",ctrl.changePassword)
+router.put("/user/update/:id",objUpload.single("imgAnh"),ctrl.UpdateAccount)
 module.exports = router;

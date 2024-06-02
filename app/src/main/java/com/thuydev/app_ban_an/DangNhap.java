@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.thuydev.app_ban_an.Account.Account;
+import com.thuydev.app_ban_an.Interface.IUpdateData;
 import com.thuydev.app_ban_an.Interface.ProductInterface;
 
 import retrofit2.Call;
@@ -22,11 +23,28 @@ import retrofit2.Response;
 
 public class DangNhap extends AppCompatActivity {
 
-    public static Account account;
+   public static DangNhap dangNhap ;
+    public Account account;
+    public IUpdateData iUpdateData = new IUpdateData() {
+    @Override
+    public void UpdateData(Account account) {
+
+    }
+
+    @Override
+    public void UpdateData(ProfileUser profileUser) {
+        ReloadAccount(profileUser);
+
+
+    }
+};
     SharedPreferences sharedPreferences ;
     private EditText edtEmail, edtMatKhau;
+    String email;
+    String matKhau;
     private AppCompatButton btnDangNhap, btnDangKy;
     private CheckBox check;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +52,7 @@ public class DangNhap extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_dang_nhap);
         // Ánh xạ EditText
+        dangNhap = this;
         sharedPreferences = getSharedPreferences("Data",MODE_PRIVATE);
         edtEmail = findViewById(R.id.edt_email_dangnhap);
         edtMatKhau = findViewById(R.id.edt_matkhau_dangnhap);
@@ -48,6 +67,7 @@ public class DangNhap extends AppCompatActivity {
             Intent intent = new Intent(DangNhap.this, DangKy.class);
             startActivity(intent);
         });
+
     }
 
     private void CheckData() {
@@ -73,8 +93,8 @@ public class DangNhap extends AppCompatActivity {
 
     private void dangNhap() {
         // Lấy thông tin từ các trường EditText
-        String email = edtEmail.getText().toString();
-        String matKhau = edtMatKhau.getText().toString();
+        email = edtEmail.getText().toString();
+        matKhau = edtMatKhau.getText().toString();
         ProductInterface.GETAPI().login(new Account(email, matKhau)).enqueue(new Callback<Account>() {
             @Override
             public void onResponse(Call<Account> call, Response<Account> response) {
@@ -103,5 +123,28 @@ public class DangNhap extends AppCompatActivity {
         });
     }
 
+    public void ReloadAccount(ProfileUser profileUser){
+        email = edtEmail.getText().toString();
+        matKhau = edtMatKhau.getText().toString();
+        ProductInterface.GETAPI().login(new Account(email, matKhau)).enqueue(new Callback<Account>() {
+            @Override
+            public void onResponse(Call<Account> call, Response<Account> response) {
+                if (response.isSuccessful()){
+                    account = response.body();
+                    profileUser.user = response.body();
+                    profileUser.ShowDataHeader();
+                    Log.e("TAG", "UpdateData: "+profileUser.user );
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<Account> call, Throwable t) {
+                // Xử lý lỗi khi gửi yêu cầu đăng nhập
+                Toast.makeText(DangNhap.this, "Đã xảy ra lỗi. Vui lòng kiểm tra kết nối và thử lại!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 }

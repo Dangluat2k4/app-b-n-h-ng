@@ -51,7 +51,7 @@ public class fragment_giohang extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         list = new ArrayList<>();
         listPro = new ArrayList<>();
-        id = DangNhap.account.get_id();
+        id = DangNhap.dangNhap.account.get_id();
         cartAdapter = new CartAdapter(getContext(),list,listPro,this);
         binding.rcvListgio.setAdapter(cartAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
