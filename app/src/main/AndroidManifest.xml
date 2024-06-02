@@ -22,10 +22,10 @@
             android:name=".ShowDetailProduct"
             android:exported="false" />
         <activity
-            android:name=".ManHinhNhanVien"
+            android:name=".DangNhap"
             android:exported="false"/>
         <activity
-            android:name=".DangNhap"
+            android:name=".ManHinhNhanVien"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
