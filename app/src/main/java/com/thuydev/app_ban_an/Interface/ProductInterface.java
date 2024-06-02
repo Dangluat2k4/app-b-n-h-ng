@@ -84,37 +84,16 @@ public interface ProductInterface {
     Call<String> AddBill(@Body HashMap<String, Object> Data);
 
     @GET("apiuser/user/bill/{id}")
-
-    Call<List<Bill>> GetBills(@Path("id")String id);
-    @GET("apiuser/user/billdetail/{id}")
-    Call<List<BillDetail>> GetBillDetails(@Path("id")String id);
-    @DELETE("apiuser/user/bill/delete/{id}")
-    Call<String> DeleteBill(@Path("id")String id);
+    Call<List<Bill>> GetBills(@Path("id") String id);
 
     @GET("apiuser/user/billdetail/{id}")
     Call<List<BillDetail>> GetBillDetails(@Path("id") String id);
-
-
- @POST("apiuser/login")
- Call<Account> login(@Body Account account);
- @GET("apiuser/Account")
- Call<List<Account>> GetListAccount();
- @GET("apiuser/DsBill")
- Call<List<BillDetail>> GetListxacnhan();
 
     @POST("apiuser/Reg")
     Call<Accountfeedback> accountfeedback(@Body Account account);
 
     @POST("apiuser/login")
     Call<Account> login(@Body Account account);
-
-
- // xóa ẩn(đổi status)
- @PUT("apiuser/xoahoadon/{id}")
- Call<Void> Xoahoadon(@Path("id") String id);
- @PUT("apiuser/chapnhanhoadon/{id}")
- Call<Void> chapnhanhoadon(@Path("id") String id);
-
 
     @PUT("apiuser/changepassword")
     Call<ResponseBody> changePassword(@Body ChangePasswordRequest request);
@@ -129,5 +108,4 @@ public interface ProductInterface {
                                @Part("Email") RequestBody Email,
                                @Part("FullName") RequestBody FullName,
                                @Part("NumberPhone") RequestBody NumberPhone);
-
 }
