@@ -10,7 +10,10 @@ var userSchema = new db.mongoose.Schema(
         Email: { type: String, required: true },
         Password: { type: String, required: true },
         FullName: { type: String, required: false },
+        Avatar: { type: String, required: false },
         NumberPhone:{type:String,required:true},
+        Address:{type:Array,required:false},
+        MyAddress:{type:String,required:false},
         IDCategory:{type:String,required:false},
         IDBill:{type:String,required:false},
         Status:{type:Number,required:true},
@@ -37,7 +40,7 @@ userSchema.methods.generateAuthToken = async function () {
     const token = jwt.sign({ _id: user._id, Email: user.Email }, chuoi_ky_tu_bi_mat)
     // user.tokens = user.tokens.concat({token}) // code này dành cho nhiều token, ở demo này dùng 1 token
     user.token = token;
-    await user.save()
+    await user.save() 
     return token
 }
 

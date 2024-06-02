@@ -29,7 +29,7 @@ import retrofit2.Response;
 
 public class ShowDetailProduct extends AppCompatActivity {
     ActivitySanphamShowBinding binding;
-
+    String idUser = "";
     List<String> listSize;
     SizeAdapter sizeAdapter;
     int so = 0;
@@ -41,6 +41,7 @@ public class ShowDetailProduct extends AppCompatActivity {
         setContentView(binding.getRoot());
         Intent intent = getIntent();
         id = intent.getStringExtra("IDPRODUCT");
+        idUser = DangNhap.dangNhap.account.get_id();
         SetUp();
         GetData(id);
         SoluongCongTru();
@@ -69,7 +70,7 @@ public class ShowDetailProduct extends AppCompatActivity {
     private void AddCart() {
         CartDTO cartDTO = new CartDTO();
         // sau nay co dang nhap thay sau
-        cartDTO.setIDUser(ProductInterface.idUser);
+        cartDTO.setIDUser(idUser);
         cartDTO.setIDProduct(id);
         cartDTO.setSize(sizeAdapter.GetSize());
         cartDTO.setAmount(so);

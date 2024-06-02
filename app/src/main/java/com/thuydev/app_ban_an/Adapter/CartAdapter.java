@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,13 +16,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.thuydev.app_ban_an.DTO.CartDTO;
 import com.thuydev.app_ban_an.DTO.CategoryDTO;
+import com.thuydev.app_ban_an.DTO.ProductCart;
 import com.thuydev.app_ban_an.DTO.ProductDTO;
 import com.thuydev.app_ban_an.Extentions.Extention;
 import com.thuydev.app_ban_an.Interface.ProductInterface;
 import com.thuydev.app_ban_an.R;
 import com.thuydev.app_ban_an.databinding.ItemGiohangBinding;
+import com.thuydev.app_ban_an.frm.fragment_giohang;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -34,11 +39,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder>{
     List<CartDTO> list;
     List<ProductDTO> listPro;
     List<CategoryDTO> listCate;
-
-    public CartAdapter(Context context, List<CartDTO> list,List<ProductDTO> listPro) {
+    fragment_giohang fragmentGiohang;
+    public CartAdapter(Context context, List<CartDTO> list, List<ProductDTO> listPro, fragment_giohang fragmentGiohang) {
         this.context = context;
         this.list = list;
         this.listPro = listPro;
+        this.fragmentGiohang = fragmentGiohang;
         listCate = new ArrayList<>();
         GetLitsCate();
 
@@ -75,7 +81,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder>{
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         ProductDTO tempPro = GetPro(list.get(position).getIDProduct());
         CategoryDTO tempCate = GetCate(tempPro.getIDCategory());
         CheckNull(tempPro,tempCate);
@@ -86,6 +92,73 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder>{
         holder.kichCo.setText("Kích cỡ: "+list.get(position).getSize());
         holder.soLuong.setText("Số lượng: "+list.get(position).getAmount());
         holder.gia.setText("Giá: "+ Extention.MakeStyleMoney(tempPro.getPrice()));
+        holder.xoa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Xoa(list.get(position).get_id());
+            }
+        });
+        holder.mua.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Mua(position);
+            }
+        });
+    }
+
+    private void Mua(int position) {
+        List<ProductCart> listCartPro = new ArrayList<>();
+        List<String> listIDCart = new ArrayList<>();
+        HashMap<String,Object> data = new HashMap<>();
+        CartDTO cartDTO = list.get(position);
+        ProductDTO tempPro = GetPro(cartDTO.getIDProduct());
+        listIDCart.add(cartDTO.get_id());
+        Calendar lich = Calendar.getInstance();
+        int ngay = lich.get(Calendar.DAY_OF_MONTH);
+        int thang = lich.get(Calendar.MONTH) + 1;
+        int nam = lich.get(Calendar.YEAR);
+        String ngayMua = String.format("%02d/%02d/%02d",nam,thang,ngay);
+        listCartPro.add(new ProductCart(cartDTO.getIDProduct(),cartDTO.getAmount(),tempPro.getPrice()));
+        data.put("IDUser",cartDTO.getIDUser());
+        data.put("IDSeller","?");
+        data.put("IDProduct",listCartPro);
+        data.put("Status",0);
+        data.put("Date",ngayMua);
+        data.put("Amount",listCartPro);
+        data.put("IDCart",listIDCart);
+
+        Call<String> call = ProductInterface.GETAPI().AddBill(data);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()) Toast.makeText(context, response.body(), Toast.LENGTH_SHORT).show();
+                fragmentGiohang.GetCart(fragmentGiohang.id);
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable throwable) {
+
+            }
+        });
+
+    }
+
+    private void Xoa(String id) {
+        Call<String> call = ProductInterface.GETAPI().DeleteCart(id);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if(response.isSuccessful()){
+                    Toast.makeText(context, response.body(), Toast.LENGTH_SHORT).show();
+                    fragmentGiohang.GetCart(fragmentGiohang.id);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable throwable) {
+
+            }
+        });
     }
 
     private void CheckNull(ProductDTO tempPro, CategoryDTO tempCate) {

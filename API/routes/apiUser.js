@@ -5,6 +5,9 @@ var mdw = require('../midleware/api_authen');
 var multer = require('multer');
 var objUpload = new multer({dest:'./tmp'});
 
+router.get("/Account",ctrl.XemDanhSachAccount)
+router.get("/DsBill",ctrl.DanhSachBillChuaGiao)
+
 router.get("/product",ctrl.XemDanhSachSanPham)
 router.get("/product/:id",ctrl.XemSanPham)
 router.get("/product/category/:id",ctrl.XemDanhSachSanPhamTheoLoai)
@@ -14,10 +17,18 @@ router.get("/productdetail",ctrl.XemDanhSachSPCT)
 router.get("/user/cart/:id",ctrl.DanhSachCart)
 router.post("/user/cart/add",ctrl.ThemCart)
 router.put("/cart/edit/:id",ctrl.SuaCart)
-router.delete("/cart/delete/:id")
-// đăng nhập, đăng ký
+router.delete("/cart/delete/:id",ctrl.XoaCart)
+router.post("/bill/add",ctrl.ThemHoaDon)
+router.get("/user/bill/:id",ctrl.DanhSachBill)
+router.get("/user/billdetail/:id",ctrl.DanhSachBillDetail)
+router.delete("/user/bill/delete/:id",ctrl.XoaBill)
+
+router.put('/xoahoadon/:id', ctrl.Xoahoadon);
+router.put('/chapnhanhoadon/:id', ctrl.chapnhanhoadon);
+
+
 router.post("/login", ctrl.Login);
 router.post("/Reg", ctrl.Reg);
-
-router.post("/changepassword", ctrl.changePassword);
+router.put("/changepassword",ctrl.changePassword)
+router.put("/user/update/:id",objUpload.single("imgAnh"),ctrl.UpdateAccount)
 module.exports = router;
