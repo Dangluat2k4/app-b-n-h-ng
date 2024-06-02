@@ -1,35 +1,83 @@
 package com.thuydev.app_ban_an.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
+
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.thuydev.app_ban_an.DTO.Bill;
 import com.thuydev.app_ban_an.DTO.BillDetail;
+
+import com.thuydev.app_ban_an.Interface.ProductInterface;
+
+import com.thuydev.app_ban_an.DTO.ProductDTO;
+import com.thuydev.app_ban_an.Interface.ProductInterface;
+import com.thuydev.app_ban_an.R;
+import com.thuydev.app_ban_an.databinding.DialogThemHangBinding;
+
 import com.thuydev.app_ban_an.databinding.ItemChodonBinding;
+import com.thuydev.app_ban_an.frm.fragment_hoadon;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 
     ItemChodonBinding binding;
     List<Bill> billList;
     List<BillDetail> billDetails;
+    List<ProductDTO> listPro;
     Context context;
-
-    public BillAdapter(List<Bill> billList, List<BillDetail> billDetails, Context context) {
+    fragment_hoadon fragmentHoadon;
+    public BillAdapter(List<Bill> billList, List<BillDetail> billDetails, Context context, fragment_hoadon fragmentHoadon) {
         this.billList = billList;
         this.billDetails = billDetails;
         this.context = context;
+
+        this.fragmentHoadon = fragmentHoadon;
+
+        listPro = new ArrayList<>();
+        GetPro();
+    }
+
+    private void GetPro() {
+        Call<List<ProductDTO>> call = ProductInterface.GETAPI().GetListProducts();
+        call.enqueue(new Callback<List<ProductDTO>>() {
+            @Override
+            public void onResponse(Call<List<ProductDTO>> call, Response<List<ProductDTO>> response) {
+                if (response.isSuccessful()){
+                    listPro.clear();
+                    listPro.addAll(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductDTO>> call, Throwable throwable) {
+
+            }
+        });
+
     }
 
     @NonNull
@@ -39,6 +87,7 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
         return new ViewHolder(binding.getRoot());
     }
 
+    @SuppressLint("RecyclerView")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String Xanh = "#44cc00";
@@ -67,6 +116,50 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
         } else {
             holder.trangthai.setText("Lỗi");
         }
+
+        holder.xoa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Xoa(billList.get(position).get_id());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+
+    private void Xoa(String id) {
+        Call<String> call = ProductInterface.GETAPI().DeleteBill(id);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if(response.isSuccessful()) Toast.makeText(context, response.body(), Toast.LENGTH_SHORT).show();
+                fragmentHoadon.GetBill();
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable throwable) {
+
+            }
+        });
+
+    private void ShowDataDetail(int p) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        DialogThemHangBinding binding1 = DialogThemHangBinding.inflate(((Activity)context).getLayoutInflater(),null,false);
+        builder.setView(binding1.getRoot());
+        Dialog dialog = builder.create();
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        binding1.edtThemhang.setVisibility(View.GONE);
+        binding1.ibtnAddhang.setVisibility(View.GONE);
+        binding1.tvTittle2.setText("Đơn hàng chi tiết");
+        // viet code o day
+        ChiTietDonHangMuaAdapter chiTietDonHangMuaAdapter = new ChiTietDonHangMuaAdapter(billList.get(p).getIDProduct(),listPro,context);
+        binding1.listHang.setAdapter(chiTietDonHangMuaAdapter);
+
     }
 
     private BillDetail GetBillDetail(String id) {

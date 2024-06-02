@@ -14,7 +14,7 @@ exports.ListAccout = async (req, res, next) => {
 
 exports.ListAccoutNV = async (req, res, next) => {
     try {
-        let list = await Account.find({ Level: { $ne: 1 } });
+        let list = await Account.find({ Level: { $ne: 0 } });
         res.render('account/list-nhanVien', { listNV: list });
     } catch (error) {
         console.log(error);
@@ -24,7 +24,7 @@ exports.ListAccoutNV = async (req, res, next) => {
 
 exports.ListAccoutKH = async (req, res, next) => {
     try {
-        let list = await Account.find({ Level: { $ne: 0 } });
+        let list = await Account.find({ Level: { $ne: 1 } });
         res.render('account/list-khachHang', { listKH: list });
     } catch (error) {
         console.log(error);
@@ -53,10 +53,28 @@ exports.addAccount = async (req, res, next) => {
             console.log(req.body); // Kiểm tra dữ liệu req.body
             let { Email, Password, FullName, NumberPhone, Level } = req.body;
 
-            if (!Email || !Password || !FullName || !Level) {
-                smg = "Không được để trống";
+            if (!Email) {
+                smg = "Email không được bỏ trống";
                 return res.status(400).json({ smg: smg });
             }
+            if (!Password) {
+                smg = "Password không được bỏ trống";
+                return res.status(400).json({ smg: smg });
+            }
+            if (!FullName) {
+                smg = "FullName không được bỏ trống";
+                return res.status(400).json({ smg: smg });
+            }
+            if (!NumberPhone) {
+                smg = "NumberPhone không được bỏ trống ";
+                return res.status(400).json({ smg: smg });
+            }
+            if (!Level) {
+                smg = "Level Không được để trống";
+                return res.status(400).json({ smg: smg });
+            }
+
+
             if (!validateEmail(Email)) {
                 smg = "Email không hợp lệ";
                 return res.status(400).json({ smg: smg });
@@ -109,10 +127,27 @@ exports.updateAC = async (req, res, next) => {
         if (req.method == "POST") {
             let { Email, Password, FullName, NumberPhone, Level } = req.body;
 
-            if (!Email || !Password || !FullName || !Level) {
-                smg = "Không được để trống";
+            if (!Email) {
+                smg = "Email không được bỏ trống";
                 return res.status(400).json({ smg: smg });
             }
+            if (!Password) {
+                smg = "Password không được bỏ trống";
+                return res.status(400).json({ smg: smg });
+            }
+            if (!FullName) {
+                smg = "FullName không được bỏ trống";
+                return res.status(400).json({ smg: smg });
+            }
+            if (!NumberPhone) {
+                smg = "NumberPhone không được bỏ trống ";
+                return res.status(400).json({ smg: smg });
+            }
+            if (!Level) {
+                smg = "Level Không được để trống";
+                return res.status(400).json({ smg: smg });
+            }
+
             let objAC = {};
             objAC.Email = Email;
             objAC.Password = Password;

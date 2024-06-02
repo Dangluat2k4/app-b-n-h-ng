@@ -41,7 +41,7 @@ public class ShowDetailProduct extends AppCompatActivity {
         setContentView(binding.getRoot());
         Intent intent = getIntent();
         id = intent.getStringExtra("IDPRODUCT");
-        idUser = DangNhap.account.get_id();
+        idUser = DangNhap.dangNhap.account.get_id();
         SetUp();
         GetData(id);
         SoluongCongTru();

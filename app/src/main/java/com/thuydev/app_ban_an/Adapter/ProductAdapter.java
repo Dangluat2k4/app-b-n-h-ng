@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import com.thuydev.app_ban_an.DTO.ProductDTO;
+import com.thuydev.app_ban_an.Extentions.Extention;
 import com.thuydev.app_ban_an.R;
 
 
@@ -43,10 +44,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         ProductDTO dto = list.get(position);
         if (dto != null){
            Glide.with(context).load(dto.getImage())
-                   .error(R.drawable.baseline_account_balance_wallet_24)
+                   .error(R.drawable.shape_btn)
                    .into(holder.imv_anh_sp_cuahang);
-            holder.tv_tensp_cuahang.setText("sam pham" + dto.getNameProduct());
-            holder.tv_giasp_cuahang.setText("sam pham" + String.valueOf(dto.getPrice()));
+            holder.tv_tensp_cuahang.setText(dto.getNameProduct());
+            holder.tv_giasp_cuahang.setText(Extention.MakeStyleMoney(dto.getPrice()));
         }
     }
     @Override
