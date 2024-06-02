@@ -30,4 +30,5 @@ router.put('/chapnhanhoadon/:id', ctrl.chapnhanhoadon);
 router.post("/login", ctrl.Login);
 router.post("/Reg", ctrl.Reg);
 router.put("/changepassword",ctrl.changePassword)
+router.put("/user/update/:id",objUpload.single("imgAnh"),ctrl.UpdateAccount)
 module.exports = router;

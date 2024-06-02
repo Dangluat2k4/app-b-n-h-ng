@@ -41,6 +41,8 @@
             android:exported="true">
 
         </activity>
+        <activity android:name=".ProfileUser"
+            android:exported="false"/>
     </application>
 
 </manifest>

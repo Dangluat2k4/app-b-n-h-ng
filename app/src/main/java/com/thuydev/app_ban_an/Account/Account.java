@@ -1,8 +1,12 @@
 package com.thuydev.app_ban_an.Account;
 
+import java.util.List;
+
 public class Account {
-    String _id, Email, Password, FullName, NumberPhone;
+    String _id, Email, Password, FullName,NumberPhone,Avatar,MyAddress;
     int Status,Credit,Level;
+    List<String> Address;
+    public Account account = this;
 
     public Account() {
     }
@@ -10,6 +14,30 @@ public class Account {
     public Account(String email, String password) {
         Email = email;
         Password = password;
+    }
+
+    public String getAvatar() {
+        return Avatar;
+    }
+
+    public void setAvatar(String Avatar) {
+        this.Avatar = Avatar;
+    }
+
+    public String getMyAddress() {
+        return MyAddress;
+    }
+
+    public void setMyAddress(String myAddress) {
+        MyAddress = myAddress;
+    }
+
+    public List<String> getAddress() {
+        return Address;
+    }
+
+    public void setAddress(List<String> address) {
+        Address = address;
     }
 
     public String get_id() {
@@ -76,13 +104,19 @@ public class Account {
         NumberPhone = numberPhone;
     }
 
+    public void SetAccount(Account nAccount){
+        this.account = nAccount;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
-                "Email='" + Email + '\'' +
-                ", Password='" + Password + '\'' +
+                "_id='" + _id + '\'' +
+                ", Email='" + Email + '\'' +
                 ", FullName='" + FullName + '\'' +
                 ", NumberPhone='" + NumberPhone + '\'' +
+                ", Avatar='" + Avatar + '\'' +
+                ", MyAddress='" + MyAddress + '\'' +
                 '}';
     }
 }

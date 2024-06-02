@@ -45,7 +45,7 @@ String idUser = "";
     }
 
     private void SetUp() {
-        idUser = DangNhap.account.get_id();
+        idUser = DangNhap.dangNhap.account.get_id();
         billList = new ArrayList<>();
         billDetails = new ArrayList<>();
         billAdapter = new BillAdapter(billList,billDetails,getContext(),this);

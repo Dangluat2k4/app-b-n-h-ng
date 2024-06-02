@@ -3,6 +3,7 @@ package com.thuydev.app_ban_an;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -61,6 +62,12 @@ public class ManHinhKhachHang extends AppCompatActivity {
                 } else if (item.getItemId() == R.id.menu_khachhang_hoadon) {
                     SetTitleToolBar("Hóa đơn");
                     ChangeFrag(hoadonFrm);
+                } else if (item.getItemId()==R.id.menu_khachhang_thongtincanhan) {
+                    Intent intent = new Intent(ManHinhKhachHang.this, ProfileUser.class);
+                    startActivity(intent);
+                    return false;
+                }else {
+                    Toast.makeText(ManHinhKhachHang.this, "Lỗi xảy ra", Toast.LENGTH_SHORT).show();
                 }
                 return true;
             }
