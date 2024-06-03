@@ -95,7 +95,7 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
             holder.trangthai.setText("Đã xác nhận đơn");
             holder.xoa.setVisibility(View.GONE);
             holder.trangthai.setTextColor(Color.parseColor(Xanh));
-        } else if (billDetails.get(position).getStatus() == 3) {
+        } else if (billDetails.get(position).getStatus() == 2) {
             holder.trangthai.setText("Đơn hàng bị từ chối");
             holder.trangthai.setTextColor(Color.parseColor(Do));
             holder.xoa.setVisibility(View.VISIBLE);

@@ -31,11 +31,10 @@ public class XacNhanDonHangAdapter extends RecyclerView.Adapter<XacNhanDonHangAd
 
     private List<Account> accountList;
 
-    public XacNhanDonHangAdapter(Context context, List<BillDetail> listsp) {
+    public XacNhanDonHangAdapter(Context context, List<BillDetail> listsp, List<Account> lists) {
         this.context = context;
         this.listsp = listsp;
-        accountList = new ArrayList<>();
-        accountList = GetAccount();
+        accountList = lists;
     }
 
     private List<Account> GetAccount() {
@@ -56,12 +55,14 @@ public class XacNhanDonHangAdapter extends RecyclerView.Adapter<XacNhanDonHangAd
         });
         return lists[0];
     }
-    private void GetAccount(String id, TextView tv_tenkh, TextView tv_sdt) {
+    private void GetAccount(String id, TextView tv_tenkh, TextView tv_sdt,TextView tv_diachi) {
         for (Account item : accountList
         ) {
             if (item.get_id().equals(id)) {
                 tv_tenkh.setText("Tên khách hàng: " +item.getFullName());
                 tv_sdt.setText("Số điện thoại: " +item.getNumberPhone());
+                tv_diachi.setText("Địa chỉ: " +item.getMyAddress());
+                return;
             }
         }
     }
@@ -75,11 +76,10 @@ public class XacNhanDonHangAdapter extends RecyclerView.Adapter<XacNhanDonHangAd
     @Override
     public void onBindViewHolder(@NonNull XacNhanDonHangAdapter.ViewHolder holder, int position) {
         BillDetail detail = listsp.get(position);
-        GetAccount(detail.getIDUser(), holder.tv_tenkh, holder.tv_sdt);
+        GetAccount(detail.getIDUser(), holder.tv_tenkh, holder.tv_sdt,holder.tv_diachi);
         holder.tv_idDon.setText("Ma hoa don: "+ detail.get_id());
         holder.tv_gia.setText("Giá: "+String.valueOf(detail.getTotal()));
         holder.tv_soluong.setText("Số lượng: " +String.valueOf(detail.getAmount()));
-        holder.tv_diachi.setText("Địa chỉ: " +detail.getIDBill());
         // Sự kiện click cho button ibtn_Huy
         holder.btn_xoa.setOnClickListener(new View.OnClickListener() {
             @Override
