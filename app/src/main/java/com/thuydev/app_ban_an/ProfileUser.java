@@ -3,6 +3,7 @@ package com.thuydev.app_ban_an;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -11,7 +12,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -30,16 +35,17 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.thuydev.app_ban_an.Account.Account;
 import com.thuydev.app_ban_an.Account.ChangePasswordRequest;
+import com.thuydev.app_ban_an.Adapter.Adapter_diachi;
 import com.thuydev.app_ban_an.Adapter.Adapter_thongtin;
 import com.thuydev.app_ban_an.Adapter.BillAdapter;
 import com.thuydev.app_ban_an.DTO.Bill;
 import com.thuydev.app_ban_an.DTO.BillDetail;
 import com.thuydev.app_ban_an.Extentions.Extention;
-import com.thuydev.app_ban_an.Interface.IUpdateData;
 import com.thuydev.app_ban_an.Interface.ProductInterface;
 import com.thuydev.app_ban_an.databinding.ActivityThongtintaikhoanBinding;
 import com.thuydev.app_ban_an.databinding.DialogDoiMatKhauBinding;
 import com.thuydev.app_ban_an.databinding.DialogLichsuBinding;
+import com.thuydev.app_ban_an.databinding.DialogThemHangBinding;
 import com.thuydev.app_ban_an.databinding.DialogUpdateprofileBinding;
 
 import java.io.File;
@@ -53,7 +59,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Multipart;
 
 
 public class ProfileUser extends AppCompatActivity {
@@ -64,6 +69,7 @@ public class ProfileUser extends AppCompatActivity {
     Account user;
     Uri uri = null;
     ImageView tempAvatar;
+    int change = 0;
     private static final int CODE_QUYEN = 1;
 
     @Override
@@ -295,10 +301,95 @@ public class ProfileUser extends AppCompatActivity {
             }
         });
     }
+    private void XoaDiaChi(List<String> list_diaChi, int position, Adapter_diachi adapter) {
+        android.app.AlertDialog.Builder builder1 = new android.app.AlertDialog.Builder(this);
+        builder1.setTitle("Cảnh báo").setIcon(R.drawable.cancel).setMessage("Nếu bạn xác nhận dữ liệu sẽ mất mãi mãi");
+        builder1.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder1.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // xóa phần tử list ở đây
+                list_diaChi.remove(position);
+                user.setAddress(list_diaChi);
+                adapter.notifyDataSetChanged();
+                UpdateNoneImg(user);
+                Toast.makeText(ProfileUser.this, "Xóa thành công", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder1.create().show();
+    }
+    private void ChonDiaChiGiaoHang(List<String> listDiaChi, int position) {
+        user.setMyAddress(listDiaChi.get(position));
+        UpdateNoneImg(user);
+    }
+    private void AdiaChi( EditText edt_diachi, Adapter_diachi adapter, List<String> listDiaChi) {
+        Log.e("TAG", "AdiaChi: "+change );
+        if (change == 0) {
+            edt_diachi.setVisibility(View.VISIBLE);
+            change = 1;
+        }else {
+            if(edt_diachi.getText().toString().isEmpty()){
+                Toast.makeText(this, "Người dùng không được để trống", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            edt_diachi.setVisibility(View.GONE);
+            change= 0;
+            listDiaChi.add(edt_diachi.getText().toString().trim());
+            adapter.notifyDataSetChanged();
+            user.setMyAddress(edt_diachi.getText().toString().trim());
+            user.setAddress(listDiaChi);
+            UpdateNoneImg(user);
+            edt_diachi.setText("");
+        }
+    }
+
 
     public void DiaChi() {
-
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        DialogThemHangBinding binding1 = DialogThemHangBinding.inflate(getLayoutInflater());
+        builder.setView(binding1.getRoot());
+        Dialog dialog = builder.create();
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        // viet code o day
+        final int change = 0;
+        binding1.edtThemhang.setHint("Số nhà,Ngõ,Đường,Quận,Thành Phố");
+        binding1.tvTittle2.setText("Địa chỉ");
+        binding1.edtThemhang.setVisibility(View.GONE);
+        List<String> list_diaChi = new ArrayList<>();
+        if (user.getAddress()!=null){
+            list_diaChi.addAll(user.getAddress());
+        }
+        Adapter_diachi adapter = new Adapter_diachi(list_diaChi, this);
+        binding1.listHang.setAdapter(adapter);
+        binding1.listHang.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                XoaDiaChi(list_diaChi,position,adapter);
+                return false;
+            }
+        });
+        binding1.listHang.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ChonDiaChiGiaoHang(list_diaChi,position);
+                dialog.dismiss();
+            }
+        });
+        binding1.ibtnAddhang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdiaChi(binding1.edtThemhang,adapter,list_diaChi);
+            }
+        });
     }
+
+
 
     public void LichSuMuaHang() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
