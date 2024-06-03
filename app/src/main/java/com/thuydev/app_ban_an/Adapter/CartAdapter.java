@@ -107,6 +107,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder>{
     }
 
     private void Mua(int position) {
+        if (fragmentGiohang.CheckAddressUser()){
+            Toast.makeText(context, "Bạn phải điền địa chỉ trong Quản lý người dùng > Địa chỉ ", Toast.LENGTH_SHORT).show();
+            return;
+        }
         List<ProductCart> listCartPro = new ArrayList<>();
         List<String> listIDCart = new ArrayList<>();
         HashMap<String,Object> data = new HashMap<>();

@@ -66,6 +66,10 @@ public class fragment_giohang extends Fragment {
 
     }
     private void Mua() {
+        if (CheckAddressUser()){
+            Toast.makeText(getContext(), "Bạn phải điền địa chỉ trong Quản lý người dùng > Địa chỉ ", Toast.LENGTH_SHORT).show();
+            return;
+        }
         List<ProductCart> listCartPro = new ArrayList<>();
         List<String> listIDCart = new ArrayList<>();
         HashMap<String,Object> data = new HashMap<>();
@@ -100,6 +104,11 @@ public class fragment_giohang extends Fragment {
             }
         });
 
+    }
+
+    public boolean CheckAddressUser() {
+        Log.e("TAG", "CheckAddressUser: "+DangNhap.dangNhap.account );
+        return DangNhap.dangNhap.account.getMyAddress()==null||DangNhap.dangNhap.account.getMyAddress().isEmpty();
     }
 
     private void TinhTong() {
