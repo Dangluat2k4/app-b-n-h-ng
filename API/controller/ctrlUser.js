@@ -296,7 +296,6 @@ exports.XoaCart = async (req, res, next) => {
 exports.DanhSachBill = async (req, res, next) => {
     try {
         let list = await Bill.Bill.find({ IDUser: req.params.id }).sort({ Name: 1 })
-        console.log(list)
         res.status(200).json(list);
     } catch (error) {
         console.log(error)
@@ -373,4 +372,84 @@ exports.ThemHoaDon = async (req, res, next) => {
     }
     res.status(400).json(smg)
 };
+exports.XoaBill = async (req, res, next) => {
+    let smg = '';
+    try {
+        obj = await Bill.Bill.findOne({ _id: req.params.id });
+        if (obj == null) {
+            smg = "Loại không tồn tại"
+            return res.status(400).json( smg);
+        }
+        smg = 'Lấy dữ liệu thành công'
+        if (req.method == 'DELETE') {
+            await Bill.Bill.findByIdAndDelete(req.params.id);
+            await BillDetail.BillDetail.findOneAndDelete({IDBill:req.params.id});
+            smg = 'Xóa thành công'
+        }
+        return res.status(200).json(smg);
+    } catch (error) {
+        smg = "Lỗi: " + error.message;
+    }
+    res.status(400).json(smg);
+};
+exports.XemDanhSachAccount = async (req, res, next) => {
+    try {
+        let list = await Account.find().sort({ FullName: 1  })
+        res.status(200).json(list);
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send(error)
+    }
+}
+exports.DanhSachBillChuaGiao = async (req, res, next) => {
+    try {
+        let list = await BillDetail.BillDetail.find({  Status: 0 }).sort({ Date: 1 });
+        res.status(200).json(list);
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send(error);
+    }
+};
+exports.Xoahoadon = async (req, res, next) => {
+    let smg = '';
+    try {
+        // Tìm kiếm và kiểm tra hóa đơn có tồn tại không
+        const bill = await BillDetail.BillDetail.findById(req.params.id);
+        if (!bill) {
+            smg = "Hóa đơn không tồn tại";
+            return res.status(400).json(smg);
+        }
+        
+        // Cập nhật thuộc tính Status từ 0 thành 2
+        await BillDetail.BillDetail.findByIdAndUpdate(req.params.id, { Status: 2 });
+
+        smg = 'Cập nhật trạng thái hóa đơn thành công';
+        return res.status(200).json(smg);
+    } catch (error) {
+        smg = "Lỗi: " + error.message;
+        return res.status(400).json(smg);
+    }
+};
+exports.chapnhanhoadon = async (req, res, next) => {
+    let smg = '';
+    try {
+        // Tìm kiếm và kiểm tra hóa đơn có tồn tại không
+        const bill = await BillDetail.BillDetail.findById(req.params.id);
+        if (!bill) {
+            smg = "Hóa đơn không tồn tại";
+            return res.status(400).json(smg);
+        }
+        
+        // Cập nhật thuộc tính Status từ 0 thành 1
+        await BillDetail.BillDetail.findByIdAndUpdate(req.params.id, { Status: 1 });
+
+        smg = 'Cập nhật trạng thái hóa đơn thành công';
+        return res.status(200).json(smg);
+    } catch (error) {
+        smg = "Lỗi: " + error.message;
+        return res.status(400).json(smg);
+    }
+};
+
+
 

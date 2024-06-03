@@ -108,4 +108,14 @@ public interface ProductInterface {
                                @Part("Email") RequestBody Email,
                                @Part("FullName") RequestBody FullName,
                                @Part("NumberPhone") RequestBody NumberPhone);
+
+    @GET("apiuser/Account")
+    Call<List<Account>> GetListAccount();
+    @GET("apiuser/DsBill")
+    Call<List<BillDetail>> GetListxacnhan();
+    // xóa ẩn(đổi status)
+    @PUT("apiuser/xoahoadon/{id}")
+    Call<Void> Xoahoadon(@Path("id") String id);
+    @PUT("apiuser/chapnhanhoadon/{id}")
+    Call<Void> chapnhanhoadon(@Path("id") String id);
 }
