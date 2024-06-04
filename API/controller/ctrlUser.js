@@ -5,10 +5,12 @@ const Cart = require("../model/Cart")
 const Category = require("../model/Category")
 const Product = require("../model/Product")
 const ProductDetail = require("../model/ProductDetail")
+const Recharge = require("../model/Recharge")
 const fs = require('fs');// thư viện sử lý file
 const { Account } = require("../model/Account");
 const bcrypt = require("bcrypt");
 const { Console } = require("console")
+const { TIMEOUT } = require("dns")
 
 //get Acount
 exports.Login = async (req, res, next) => {
@@ -284,10 +286,31 @@ exports.DanhSachBill = async (req, res, next) => {
         return res.status(400).send(error)
     }
 }
+exports.GetBill = async (req,res,next)=>{
+    try {
+        let obj = await Bill.Bill.findById(req.params.id )
+        console.log("mádfksjd")
+        res.status(200).json(obj);
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send(error)
+    } 
+}
 exports.DanhSachBillDetail = async (req,res,next)=>{
     try {
         let list = await BillDetail.BillDetail.find({ IDUser: req.params.id }).sort({ Date: 1 })
         res.status(200).json(list);
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send(error)
+    }
+}
+exports.DanhSachBillDetailToMonth = async (req,res,next)=>{
+    try {
+        let list = await BillDetail.BillDetail.find({ IDUser: req.params.id,
+            Date:{$gte:req.params.firt,$lt:req.params.end},
+            Status:1 })
+       return res.status(200).json(list);
     } catch (error) {
         console.log(error)
         return res.status(400).send(error)
@@ -321,6 +344,7 @@ exports.ThemHoaDon = async (req, res, next) => {
                 smg = "Status và Total phải là số"
                 return res.status(400).json(smg)
             }
+            console.log(IDProduct)
             // đưa đối tượng vào cơ sở dữ liệu
             let objBill = new Bill.Bill;
             let objBillDetail = new BillDetail.BillDetail;
@@ -386,8 +410,6 @@ exports.UpdateAccount = async (req, res, next) => {
         return res.status(400).json("Lỗi " + error + " xảy ra")
     }
 }
-
-
 exports.XemDanhSachAccount = async (req, res, next) => {
     try {
         let list = await Account.find().sort({ FullName: 1  })
@@ -452,3 +474,55 @@ exports.chapnhanhoadon = async (req, res, next) => {
         return res.status(400).json(smg);
     }
 };
+
+exports.YeuCauNapTien = async (req,res,next)=>{
+    try {
+        let {IDUser,Email,Money,Time} = req.body
+       
+        if(req.method =="POST"){
+            if(IDUser==''||Email==''||Time==''){
+                return res.status(400).json("Lỗi "+"không được để trống")
+            }
+            if(isNaN(Money)){
+               
+                return res.status(400).json("Lỗi "+"Tiền phải là số")
+            }
+            let obj = new Recharge.Recharge
+            if (req.file && fs.existsSync(req.file.path)) {
+                let file_path = './public/uploads/' + req.file.originalname;
+
+                // Kiểm tra định dạng tập tin
+                if (!req.file.mimetype.startsWith('image')) {
+                    fs.unlinkSync(req.file.path); // Xóa tập tin tải lên tạm thời
+                    
+                    return res.status(400).json( 'Ảnh không đúng định dạng');
+                }
+              
+                fs.renameSync(req.file.path, file_path);
+                obj.Image = '/uploads/' + req.file.originalname;
+            }else{
+              
+                return res.status(400).json("Lỗi "+"Ảnh sai định dạng")
+            }
+            obj.IDUser = IDUser
+            obj.Email=Email
+            obj.Money = Number(Money)
+            obj.Time = Time
+            obj.Status = 0
+            await obj.save()
+            return res.status(200).json("Xin hãy chờ vài phút để hệ thống kiểm tra")
+        }
+    } catch (error) {
+       
+        return res.status(400).json("Lỗi "+error)
+    }
+}
+exports.DanhSachNap = async (req,res,next)=>{
+    try {
+        let list = await Recharge.Recharge.find({IDUser:req.params.id}).sort({ FullName: 1  })
+        res.status(200).json(list);
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send(error)
+    }
+}

@@ -18,7 +18,9 @@ router.put("/cart/edit/:id",ctrl.SuaCart)
 router.delete("/cart/delete/:id",ctrl.XoaCart)
 router.post("/bill/add",ctrl.ThemHoaDon)
 router.get("/user/bill/:id",ctrl.DanhSachBill)
+router.get("/bill/:id",ctrl.GetBill)
 router.get("/user/billdetail/:id",ctrl.DanhSachBillDetail)
+router.get("/user/billdetail/:id/:firt/:end",ctrl.DanhSachBillDetailToMonth)
 
 router.get("/Account",ctrl.XemDanhSachAccount)
 router.get("/DsBill",ctrl.DanhSachBillChuaGiao)
@@ -29,4 +31,6 @@ router.post("/login", ctrl.Login);
 router.post("/Reg", ctrl.Reg);
 router.put("/changepassword",ctrl.changePassword)
 router.put("/user/update/:id",objUpload.single("imgAnh"),ctrl.UpdateAccount)
+router.post("/user/recharge",objUpload.single("imgAnh"),ctrl.YeuCauNapTien)
+router.get("/user/recharge/:id",ctrl.DanhSachNap)
 module.exports = router;

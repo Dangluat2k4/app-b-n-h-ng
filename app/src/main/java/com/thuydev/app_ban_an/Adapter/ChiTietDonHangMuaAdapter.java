@@ -11,6 +11,8 @@ import com.thuydev.app_ban_an.DTO.ProductCart;
 import com.thuydev.app_ban_an.DTO.ProductDTO;
 import com.thuydev.app_ban_an.DTO.ProductDetailDTO;
 import com.thuydev.app_ban_an.Extentions.Extention;
+import com.thuydev.app_ban_an.Interface.ProductInterface;
+import com.thuydev.app_ban_an.R;
 import com.thuydev.app_ban_an.databinding.ItemListSanphamMuaBinding;
 
 import java.util.List;
@@ -49,8 +51,16 @@ public class ChiTietDonHangMuaAdapter extends BaseAdapter {
         binding.tvTenspCt.setText("Tên sản phẩm: "+productDTO.getNameProduct());
         binding.tvGiaCt.setText("Giá: "+Extention.MakeStyleMoney(productDTO.getPrice()));
         binding.tvSoluongCt.setText("Số lượng mua: "+listProCart.get(position).getAmount());
-        Glide.with(context).load(productDTO.getImage()).into(binding.imvAnhSpCt);
-        binding.tvSoluongTrongKhoCt.setVisibility(View.GONE);
+        binding.tvSoluongTrongKhoCt.setText("Kích cỡ : "+listProCart.get(position).getSize());
+        if(productDTO.getImage().contains("https:")||productDTO.getImage().contains("http:")){
+            Glide.with(context).load(productDTO.getImage())
+                    .error(R.drawable.shape_btn)
+                    .into(binding.imvAnhSpCt);
+        }else {
+            Glide.with(context).load(ProductInterface.BASE_URL_IMAGE +productDTO.getImage())
+                    .error(R.drawable.shape_btn)
+                    .into(binding.imvAnhSpCt);
+        }
         return binding.getRoot();
     }
 
