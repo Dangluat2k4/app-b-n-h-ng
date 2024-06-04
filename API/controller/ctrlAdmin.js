@@ -370,3 +370,14 @@ exports.Xoaloai = async (req, res, next) => {
         smg = "Lỗi: " + error.message;
     }
 };
+exports.getHoaDon = async (req, res, next) => {
+    console.log("lay du lieu thanh cong")
+    try {
+        let list = await Bill.Bill.find()
+        res.render('bill/list-bill', { listBill: list });
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send(error)
+    }
+}
+// Thống kê sản phẩm theo ngày, tháng, năm
