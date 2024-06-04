@@ -1,8 +1,12 @@
 package com.thuydev.app_ban_an.Adapter;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +18,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.thuydev.app_ban_an.Account.Account;
+import com.thuydev.app_ban_an.DTO.Bill;
 import com.thuydev.app_ban_an.DTO.BillDetail;
+import com.thuydev.app_ban_an.DangNhap;
 import com.thuydev.app_ban_an.Interface.ProductInterface;
 import com.thuydev.app_ban_an.R;
+import com.thuydev.app_ban_an.databinding.DialogThemHangBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +106,7 @@ public class XacNhanDonHangAdapter extends RecyclerView.Adapter<XacNhanDonHangAd
                                     listsp.remove(adapterPosition);
                                     notifyItemRemoved(adapterPosition);
                                     // Cập nhật trạng thái trên MongoDB
-                                    updateStatus(detail.get_id(), adapterPosition);
+                                    updateStatus(detail.getIDBill(), adapterPosition);
                                 }
                             })
                             .setNegativeButton(android.R.string.no, null)
@@ -126,7 +133,7 @@ public class XacNhanDonHangAdapter extends RecyclerView.Adapter<XacNhanDonHangAd
                                     listsp.remove(adapterPosition);
                                     notifyItemRemoved(adapterPosition);
                                     // Cập nhật trạng thái trên MongoDB
-                                    chapnhan(detail.get_id(), adapterPosition);
+                                    chapnhan(detail.getIDBill(), adapterPosition);
                                 }
                             })
                             .setNegativeButton(android.R.string.no, null)
@@ -137,7 +144,21 @@ public class XacNhanDonHangAdapter extends RecyclerView.Adapter<XacNhanDonHangAd
         });
 
     }
+    /*private void ShowDataDetail(int p) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        DialogThemHangBinding binding1 = DialogThemHangBinding.inflate(((Activity)context).getLayoutInflater(),null,false);
+        builder.setView(binding1.getRoot());
+        Dialog dialog = builder.create();
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        binding1.edtThemhang.setVisibility(View.GONE);
+        binding1.ibtnAddhang.setVisibility(View.GONE);
+        binding1.tvTittle2.setText("Đơn hàng chi tiết");
+        // viet code o day
+        ChiTietDonHangMuaAdapter chiTietDonHangMuaAdapter = new ChiTietDonHangMuaAdapter(billList.get(p).getIDProduct(),listPro,context);
+        binding1.listHang.setAdapter(chiTietDonHangMuaAdapter);
 
+    }*/
     @Override
     public int getItemCount() {
         return listsp.size();
@@ -161,7 +182,9 @@ public class XacNhanDonHangAdapter extends RecyclerView.Adapter<XacNhanDonHangAd
     // Trong phương thức updateStatus
     private void updateStatus(String id, int position) {
         // Gọi API để cập nhật trạng thái từ 0 thành 2 trong MongoDB
-        Call<Void> call = ProductInterface.GETAPI().Xoahoadon(id);
+        Bill bill = new Bill();
+        bill.setIDSeller(DangNhap.dangNhap.account.get_id());
+        Call<Void> call = ProductInterface.GETAPI().Xoahoadon(id,bill );
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -182,7 +205,9 @@ public class XacNhanDonHangAdapter extends RecyclerView.Adapter<XacNhanDonHangAd
     }
     private void chapnhan(String id, int position) {
         // Gọi API để cập nhật trạng thái từ 0 thành 2 trong MongoDB
-        Call<Void> call = ProductInterface.GETAPI().chapnhanhoadon(id);
+        Bill bill = new Bill();
+        bill.setIDSeller(DangNhap.dangNhap.account.get_id());
+        Call<Void> call = ProductInterface.GETAPI().chapnhanhoadon(id,bill);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {

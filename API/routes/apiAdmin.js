@@ -33,7 +33,7 @@ router.get("/category/delete/:id",ctrl.Xoaloai)
 router.delete("/category/delete/:id",ctrl.Xoaloai)
 
 
-router.get('/bill', ctrl.getHoaDon);
+//router.get('/bill', ctrl.getHoaDon);
 
 
 
