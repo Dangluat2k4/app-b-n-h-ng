@@ -80,7 +80,7 @@ public class fragment_giohang extends Fragment {
         String ngayMua = String.format("%02d/%02d/%02d",nam,thang,ngay);
         for (CartDTO item:list
              ) {
-            listCartPro.add(new ProductCart(item.getIDProduct(),item.getAmount(),GetPricePro(item.getIDProduct())));
+            listCartPro.add(new ProductCart(item.getIDProduct(),item.getSize(),item.getAmount(),GetPricePro(item.getIDProduct())));
             listIDCart.add(item.get_id());
         }
         data.put("IDUser",id);

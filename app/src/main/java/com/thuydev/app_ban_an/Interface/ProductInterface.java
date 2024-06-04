@@ -11,6 +11,7 @@ import com.thuydev.app_ban_an.DTO.CartDTO;
 import com.thuydev.app_ban_an.DTO.CategoryDTO;
 import com.thuydev.app_ban_an.DTO.ProductDTO;
 import com.thuydev.app_ban_an.DTO.ProductDetailDTO;
+import com.thuydev.app_ban_an.DTO.Recharge;
 
 import java.util.HashMap;
 import java.util.List;
@@ -87,10 +88,12 @@ public interface ProductInterface {
 
     @GET("apiuser/user/bill/{id}")
     Call<List<Bill>> GetBills(@Path("id") String id);
-
+    @GET("apiuser/bill/{id}")
+    Call<Bill> GetBill(@Path("id") String id);
     @GET("apiuser/user/billdetail/{id}")
     Call<List<BillDetail>> GetBillDetails(@Path("id") String id);
-
+    @GET("apiuser/user/billdetail/{id}/{firt}/{end}")
+    Call<List<BillDetail>> GetBillDetailsToMonth(@Path("id") String id,@Path("firt")String firt,@Path("end")String end);
     @POST("apiuser/Reg")
     Call<Accountfeedback> accountfeedback(@Body Account account);
 
@@ -120,4 +123,14 @@ public interface ProductInterface {
     Call<Void> Xoahoadon(@Path("id") String id,@Body()Bill bill);
     @PUT("apiuser/chapnhanhoadon/{id}")
     Call<Void> chapnhanhoadon(@Path("id") String id,@Body()Bill bill );
+
+    @Multipart
+    @POST("apiuser/user/recharge")
+    Call<String> YeuCauNap(@Part() MultipartBody.Part image,
+                           @Part("Email") RequestBody Email,
+                           @Part("IDUser") RequestBody IDUser,
+                           @Part("Money") RequestBody Money,
+                           @Part("Time") RequestBody Time);
+    @GET("apiuser/user/recharge/{id}")
+    Call<List<Recharge>> GetRecharge(@Path("id")String id);
 }

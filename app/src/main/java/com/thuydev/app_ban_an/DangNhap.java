@@ -70,7 +70,7 @@ public class DangNhap extends AppCompatActivity {
 
     }
 
-    private void CheckData() {
+    public void CheckData() {
         boolean checkRMB = false;
             checkRMB = sharedPreferences.getBoolean("remeber",false);
         if (checkRMB) {
@@ -83,7 +83,7 @@ public class DangNhap extends AppCompatActivity {
         }
     }
 
-    private void SaveAccount(String email, String matKhau) {
+    public void SaveAccount(String email, String matKhau) {
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString("Username", email);
         edit.putString("pass", matKhau);

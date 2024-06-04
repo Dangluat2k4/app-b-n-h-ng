@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.thuydev.app_ban_an.Account.Account;
 import com.thuydev.app_ban_an.DTO.Bill;
 import com.thuydev.app_ban_an.DTO.BillDetail;
+import com.thuydev.app_ban_an.DTO.ProductDTO;
 import com.thuydev.app_ban_an.DangNhap;
 import com.thuydev.app_ban_an.Interface.ProductInterface;
 import com.thuydev.app_ban_an.R;
@@ -35,13 +37,34 @@ import retrofit2.Response;
 public class XacNhanDonHangAdapter extends RecyclerView.Adapter<XacNhanDonHangAdapter.ViewHolder>{
     private final Context context;
     private final List<BillDetail> listsp;
-
+    List<ProductDTO> listPro ;
     private List<Account> accountList;
 
     public XacNhanDonHangAdapter(Context context, List<BillDetail> listsp, List<Account> lists) {
         this.context = context;
         this.listsp = listsp;
         accountList = lists;
+        listPro = new ArrayList<>();
+        GetListPro();
+       accountList = GetAccount();
+    }
+
+    private void GetListPro() {
+        Call<List<ProductDTO>> call = ProductInterface.GETAPI().GetListProducts();
+        call.enqueue(new Callback<List<ProductDTO>>() {
+            @Override
+            public void onResponse(Call<List<ProductDTO>> call, Response<List<ProductDTO>> response) {
+                if(response.isSuccessful()){
+                    listPro.clear();
+                    listPro.addAll(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductDTO>> call, Throwable throwable) {
+
+            }
+        });
     }
 
     private List<Account> GetAccount() {
@@ -142,9 +165,14 @@ public class XacNhanDonHangAdapter extends RecyclerView.Adapter<XacNhanDonHangAd
                 }
             }
         });
-
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowDataDetail(position);
+            }
+        });
     }
-    /*private void ShowDataDetail(int p) {
+    private void ShowDataDetail(int p) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         DialogThemHangBinding binding1 = DialogThemHangBinding.inflate(((Activity)context).getLayoutInflater(),null,false);
         builder.setView(binding1.getRoot());
@@ -155,10 +183,30 @@ public class XacNhanDonHangAdapter extends RecyclerView.Adapter<XacNhanDonHangAd
         binding1.ibtnAddhang.setVisibility(View.GONE);
         binding1.tvTittle2.setText("Đơn hàng chi tiết");
         // viet code o day
-        ChiTietDonHangMuaAdapter chiTietDonHangMuaAdapter = new ChiTietDonHangMuaAdapter(billList.get(p).getIDProduct(),listPro,context);
-        binding1.listHang.setAdapter(chiTietDonHangMuaAdapter);
+        Log.e("TAG", "ShowDataDetail: "+listsp.get(p).getIDBill() );
+       GetBill(listsp.get(p).getIDBill(),binding1);
 
-    }*/
+    }
+
+    private void GetBill(String idBill, DialogThemHangBinding binding1) {
+       Call<Bill> billCall = ProductInterface.GETAPI().GetBill(idBill);
+        billCall.enqueue(new Callback<Bill>() {
+            @Override
+            public void onResponse(Call<Bill> call, Response<Bill> response) {
+                if (response.isSuccessful()){
+                    ChiTietDonHangMuaAdapter chiTietDonHangMuaAdapter = new ChiTietDonHangMuaAdapter(response.body().getIDProduct(),listPro,context);
+                    binding1.listHang.setAdapter(chiTietDonHangMuaAdapter);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Bill> call, Throwable throwable) {
+
+            }
+        });
+    }
+
     @Override
     public int getItemCount() {
         return listsp.size();

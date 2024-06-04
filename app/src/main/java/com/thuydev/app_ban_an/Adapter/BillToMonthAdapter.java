@@ -7,11 +7,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,7 +18,6 @@ import com.thuydev.app_ban_an.DTO.Bill;
 import com.thuydev.app_ban_an.DTO.BillDetail;
 import com.thuydev.app_ban_an.DTO.ProductDTO;
 import com.thuydev.app_ban_an.Interface.ProductInterface;
-import com.thuydev.app_ban_an.R;
 import com.thuydev.app_ban_an.databinding.DialogThemHangBinding;
 import com.thuydev.app_ban_an.databinding.ItemChodonBinding;
 
@@ -34,7 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
+public class BillToMonthAdapter extends RecyclerView.Adapter<BillToMonthAdapter.ViewHolder> {
 
     ItemChodonBinding binding;
     List<Bill> billList;
@@ -42,7 +38,7 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
     List<ProductDTO> listPro;
     Context context;
 
-    public BillAdapter(List<Bill> billList, List<BillDetail> billDetails, Context context) {
+    public BillToMonthAdapter(List<Bill> billList, List<BillDetail> billDetails, Context context) {
         this.billList = billList;
         this.billDetails = billDetails;
         this.context = context;
@@ -82,7 +78,8 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
         String Do = "#FF0000";
         String Cam = "#FFC107";
 
-        BillDetail billDetail = GetBillDetail(billList.get(position).get_id());
+        BillDetail billDetail = billDetails.get(position);
+        Bill bill = GetBill(billDetail.getIDBill());
         holder.tenSP.setText("Mã hàng: " + billList.get(position).get_id());
         holder.giaSP.setText("Tổng giá: " +  NumberFormat.getNumberInstance(Locale.getDefault()).format(billDetail.getTotal()) + "đ");
         holder.soLuong.setText("Số lượng: " + billDetail.getAmount() + " SP");
@@ -110,7 +107,13 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
                 ShowDataDetail(position);
             }
         });
+    }
 
+    private Bill GetBill(String idBill) {
+        for (Bill item: billList) {
+            if(idBill.equals(item.get_id())) return item;
+        }
+        return new Bill();
     }
 
     private void ShowDataDetail(int p) {
@@ -129,18 +132,12 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 
     }
 
-    private BillDetail GetBillDetail(String id) {
-        for (BillDetail item: billDetails) {
-            if(id.equals(item.getIDBill())) return item;
-        }
-        return new BillDetail();
-    }
 
 
 
     @Override
     public int getItemCount() {
-        return billList.size();
+        return billDetails.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
