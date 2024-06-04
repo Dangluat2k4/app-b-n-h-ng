@@ -32,13 +32,7 @@
             android:scaleType="centerCrop"
             android:src="@drawable/xmark" />
     </LinearLayout>
-
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/seach_sp_KH"
-        android:hint="Nhập tên sản phẩm cần tìm"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="15dp" />
+    
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv_list_sanPham_more"

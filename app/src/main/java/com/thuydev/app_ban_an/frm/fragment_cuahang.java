@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,7 +28,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class fragment_cuahang extends Fragment {
-    List<CategoryDTO>list;
+    List<CategoryDTO>list,tempA;
     String TAG = "vvvvvvvvvvv";
     CategoryAdapter categoryAdapter;
     FragmentCuahangBinding binding;
@@ -37,12 +38,43 @@ public class fragment_cuahang extends Fragment {
         View view =binding.getRoot()  ;
 
         list = new ArrayList<>();
+        tempA = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.rcvCuaHang.setLayoutManager(layoutManager);
         categoryAdapter = new CategoryAdapter(getContext(), list);
         binding.rcvCuaHang.setAdapter(categoryAdapter);
         getCategory();
+        binding.seachHangKH.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Search(newText);
+                return false;
+            }
+        });
         return view;
+    }
+
+    private void Search(String newText) {
+        if(newText.isEmpty()){
+            getCategory();
+        }else {
+            List<CategoryDTO> temp = new ArrayList<>();
+            for (CategoryDTO item:tempA) {
+                if(item.getNameCategory().toLowerCase().trim().contains(newText.toLowerCase().trim())){
+                    temp.add(item);
+                    Log.e(TAG, "Search: "+item.getNameCategory() );
+                }
+            }
+            list.clear();
+            list.addAll(temp);
+            categoryAdapter.notifyDataSetChanged();
+
+        }
     }
 
     public void getCategory() {
@@ -53,6 +85,7 @@ public class fragment_cuahang extends Fragment {
                if(response.isSuccessful()){
                    list.clear();
                    list.addAll(response.body());
+                   tempA.addAll(list);
                    categoryAdapter.notifyDataSetChanged();
 
                }else Log.e(TAG, "onResponse: "+response.body() );

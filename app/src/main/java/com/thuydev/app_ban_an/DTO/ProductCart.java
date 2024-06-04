@@ -1,7 +1,7 @@
 package com.thuydev.app_ban_an.DTO;
 
 public class ProductCart {
-    String IDProduct;
+    String IDProduct,Size;
     int Amount;
     int Price;
 
@@ -14,8 +14,26 @@ public class ProductCart {
         Amount = amount;
     }
 
+    public ProductCart() {
+    }
+
+    public String getSize() {
+        return Size;
+    }
+
+    public void setSize(String size) {
+        Size = size;
+    }
+
     public ProductCart(String IDProduct, int amount, int price) {
         this.IDProduct = IDProduct;
+        Amount = amount;
+        Price = price;
+    }
+
+    public ProductCart(String IDProduct, String size, int amount, int price) {
+        this.IDProduct = IDProduct;
+        Size = size;
         Amount = amount;
         Price = price;
     }

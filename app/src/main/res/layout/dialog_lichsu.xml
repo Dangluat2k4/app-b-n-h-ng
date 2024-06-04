@@ -20,7 +20,9 @@
             android:text="Lịch sử mua hàng "
             android:textColor="#E6903B"
             android:textSize="30dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:id="@+id/title"
+            />
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

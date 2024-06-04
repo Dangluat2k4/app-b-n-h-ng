@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.thuydev.app_ban_an.Account.Account;
 import com.thuydev.app_ban_an.Adapter.XacNhanDonHangAdapter;
+import com.thuydev.app_ban_an.DTO.Bill;
 import com.thuydev.app_ban_an.DTO.BillDetail;
 import com.thuydev.app_ban_an.Interface.ProductInterface;
 import com.thuydev.app_ban_an.R;
@@ -27,7 +28,9 @@ import retrofit2.Response;
 
 public class fragment_quanlyhoadon_nhanvien extends Fragment {
     RecyclerView recyclerView;
+
     List<BillDetail> detailList;
+
     String TAG = "vvvvvvvvvvv";
     List<Account>lists ;
     XacNhanDonHangAdapter xacNhanDonHangAdapter;
@@ -74,6 +77,9 @@ public class fragment_quanlyhoadon_nhanvien extends Fragment {
             }
         });
     }
+
+
+
     private void GetAccount() {
         Call<List<Account>> call = ProductInterface.GETAPI().GetListAccount();
         call.enqueue(new Callback<List<Account>>() {
