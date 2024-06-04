@@ -2,6 +2,7 @@ package com.thuydev.app_ban_an.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.thuydev.app_ban_an.DTO.CategoryDTO;
+import com.thuydev.app_ban_an.ShowDetailProduct;
+import com.thuydev.app_ban_an.ShowProductFromCate;
 import com.thuydev.app_ban_an.databinding.ItemCuahangBinding;
 
 import java.util.List;
@@ -47,6 +50,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 // xem san pham theo loai
+                Intent intent = new Intent(context, ShowProductFromCate.class);
+                intent.putExtra("IDCATE", list.get(position).get_id());
+                ((Activity)context).startActivity(intent);
             }
         });
     }

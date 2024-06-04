@@ -39,7 +39,11 @@ public class ProductItemAdapter extends RecyclerView.Adapter<ProductItemAdapter.
         this.binding = binding;
         GetData(idCate);
     }
-
+    public ProductItemAdapter(Context context, String idCate) {
+        this.context = context;
+        this.list = new ArrayList<>();
+        GetData(idCate);
+    }
     private void GetData(String idCate) {
         Call<List<ProductDTO>> call = ProductInterface.GETAPI().GetListProductToCate(idCate);
         call.enqueue(new Callback<List<ProductDTO>>() {
@@ -49,6 +53,7 @@ public class ProductItemAdapter extends RecyclerView.Adapter<ProductItemAdapter.
                     list.clear();
                     list.addAll(response.body());
                     notifyDataSetChanged();
+                    if(binding==null)return;
                     if(list.size()<=0){
                         binding.tvTenhang.setVisibility(View.GONE);
                         binding.llXemthemMoi.setVisibility(View.GONE);
@@ -76,11 +81,19 @@ public class ProductItemAdapter extends RecyclerView.Adapter<ProductItemAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ProductDTO dto = list.get(position);
         if (dto != null){
-           Glide.with(context).load(dto.getImage())
-                   .error(R.drawable.baseline_account_balance_wallet_24)
-                   .into(holder.imv_anh_sp_cuahang);
-            holder.tv_tensp_cuahang.setText("sam pham" + dto.getNameProduct());
-            holder.tv_giasp_cuahang.setText("sam pham" + String.valueOf(dto.getPrice()));
+            if(dto.getImage().contains("https:")||dto.getImage().contains("http:")){
+                Glide.with(context).load(dto.getImage())
+                        .error(R.drawable.shape_btn)
+                        .into(holder.imv_anh_sp_cuahang);
+                Log.e("TAG", "onBindViewHolder1: "+dto.getImage() );
+            }else {
+                Glide.with(context).load(ProductInterface.BASE_URL_IMAGE +dto.getImage())
+                        .error(R.drawable.shape_btn)
+                        .into(holder.imv_anh_sp_cuahang);
+                Log.e("TAG", "onBindViewHolder2: "+ProductInterface.BASE_URL_IMAGE+dto.getImage() );
+            }
+            holder.tv_tensp_cuahang.setText("Tên : " + dto.getNameProduct());
+            holder.tv_giasp_cuahang.setText("Giá " + String.valueOf(dto.getPrice()));
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
