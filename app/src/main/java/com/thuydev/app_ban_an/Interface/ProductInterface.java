@@ -33,6 +33,7 @@ import retrofit2.http.Path;
 
 public interface ProductInterface {
     public static String BASE_URL = "http://10.0.2.2:3000/";
+    public static String BASE_URL_IMAGE = "http://10.0.2.2:3000";
     public static String diachi = "dia chi Fake";
 
     public static ProductInterface GETAPI() {
@@ -64,7 +65,8 @@ public interface ProductInterface {
 
     @GET("apiuser/category")
     Call<List<CategoryDTO>> GetListCategory();
-
+    @GET("apiuser/category/{id}")
+    Call<CategoryDTO> GetCategory(@Path("id")String id);
     @GET("apiuser/product/category/{id}")
     Call<List<ProductDTO>> GetListProductToCate(@Path("id") String id);
 
@@ -115,7 +117,7 @@ public interface ProductInterface {
     Call<List<BillDetail>> GetListxacnhan();
     // xóa ẩn(đổi status)
     @PUT("apiuser/xoahoadon/{id}")
-    Call<Void> Xoahoadon(@Path("id") String id);
+    Call<Void> Xoahoadon(@Path("id") String id,@Body()Bill bill);
     @PUT("apiuser/chapnhanhoadon/{id}")
-    Call<Void> chapnhanhoadon(@Path("id") String id);
+    Call<Void> chapnhanhoadon(@Path("id") String id,@Body()Bill bill );
 }
