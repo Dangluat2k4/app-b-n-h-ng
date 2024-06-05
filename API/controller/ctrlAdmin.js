@@ -370,14 +370,128 @@ exports.Xoaloai = async (req, res, next) => {
         smg = "Lỗi: " + error.message;
     }
 };
-exports.getHoaDon = async (req, res, next) => {
+exports.getHoaDonDangXuLy = async (req, res, next) => {
     console.log("lay du lieu thanh cong")
     try {
-        let list = await Bill.Bill.find()
-        res.render('bill/list-bill', { listBill: list });
+        let list = await BillDetail.find({  Status: 0 }).sort({ Date: 1 }).select('ID IDUser IDBill Status Date Total Amount');
+        // Lấy danh sách các ID của người dùng từ các hóa đơn
+        let userIds = list.map(bill => bill.IDUser);
+
+        // Tìm tất cả các người dùng tương ứng với các ID đã lấy được
+        let users = await Account.find({ _id: { $in: userIds } }).select('FullName');
+
+        // Mapping dữ liệu vào listBill
+        list = list.map(bill => {
+            let user = users.find(user => user._id.toString() === bill.IDUser.toString());
+            return {
+                _id: bill._id,
+                FullName: user ? user.FullName : 'Không có dữ liệu',
+                IDBill: bill.IDBill,
+                Status: bill.Status,
+                Date: bill.Date,
+                Total: bill.Total,
+                Amount: bill.Amount
+            };
+        });
+
+        res.render('billdetail/bill-dangcho', { listBillCho: list });
     } catch (error) {
         console.log(error)
         return res.status(400).send(error)
     }
 }
-// Thống kê sản phẩm theo ngày, tháng, năm
+
+exports.getHoaDonDuyet = async (req, res, next) => {
+    console.log("lay du lieu thanh cong")
+    try {
+        let list = await BillDetail.find({  Status: 1 }).sort({ Date: 1 }).select('ID IDUser IDBill Status Date Total Amount');
+        // Lấy danh sách các ID của người dùng từ các hóa đơn
+        let userIds = list.map(bill => bill.IDUser);
+
+        // Tìm tất cả các người dùng tương ứng với các ID đã lấy được
+        let users = await Account.find({ _id: { $in: userIds } }).select('FullName');
+
+        // Mapping dữ liệu vào listBill
+        list = list.map(bill => {
+            let user = users.find(user => user._id.toString() === bill.IDUser.toString());
+            return {
+                _id: bill._id,
+                FullName: user ? user.FullName : 'Không có dữ liệu',
+                IDBill: bill.IDBill,
+                Status: bill.Status,
+                Date: bill.Date,
+                Total: bill.Total,
+                Amount: bill.Amount
+            };
+        });
+
+        res.render('billdetail/bill-daduyet', { listBillDuyet: list });
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send(error)
+    }
+}
+exports.getHoaDonTuChoi = async (req, res, next) => {
+    console.log("lay du lieu thanh cong")
+    try {
+        let list = await BillDetail.find({  Status: 2 }).sort({ Date: 1 }).select('ID IDUser IDBill Status Date Total Amount');
+        // Lấy danh sách các ID của người dùng từ các hóa đơn
+        let userIds = list.map(bill => bill.IDUser);
+
+        // Tìm tất cả các người dùng tương ứng với các ID đã lấy được
+        let users = await Account.find({ _id: { $in: userIds } }).select('FullName');
+
+        // Mapping dữ liệu vào listBill
+        list = list.map(bill => {
+            let user = users.find(user => user._id.toString() === bill.IDUser.toString());
+            return {
+                _id: bill._id,
+                FullName: user ? user.FullName : 'Không có dữ liệu',
+                IDBill: bill.IDBill,
+                Status: bill.Status,
+                Date: bill.Date,
+                Total: bill.Total,
+                Amount: bill.Amount
+            };
+        });
+
+        res.render('billdetail/bill-tuchoi', { listBillTuChoi: list });
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send(error)
+    }
+}
+exports.getAllHoaDon = async (req, res, next) => {
+    console.log("Lấy dữ liệu thành công");
+    try {
+        let list = await BillDetail.find().select('ID IDUser IDBill Status Date Total Amount');
+
+        // Lấy danh sách các ID của người dùng từ các hóa đơn
+        let userIds = list.map(bill => bill.IDUser);
+
+        // Tìm tất cả các người dùng tương ứng với các ID đã lấy được
+        let users = await Account.find({ _id: { $in: userIds } }).select('FullName');
+
+        // Mapping dữ liệu vào listBill
+        list = list.map(bill => {
+            let user = users.find(user => user._id.toString() === bill.IDUser.toString());
+            return {
+                _id: bill._id,
+                FullName: user ? user.FullName : 'Không có dữ liệu',
+                IDBill: bill.IDBill,
+                Status: bill.Status,
+                Date: bill.Date,
+                Total: bill.Total,
+                Amount: bill.Amount
+            };
+        });
+
+        res.render('billdetail/list-billdetail', { listBill: list });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send(error);
+    }
+};
+
+
+
