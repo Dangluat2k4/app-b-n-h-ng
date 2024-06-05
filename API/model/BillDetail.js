@@ -16,4 +16,4 @@ const scheme = new db.mongoose.Schema(
     }
 )
 let BillDetail = db.mongoose.model("BillDetail",scheme);
-module.exports = BillDetail
+module.exports = {BillDetail}
