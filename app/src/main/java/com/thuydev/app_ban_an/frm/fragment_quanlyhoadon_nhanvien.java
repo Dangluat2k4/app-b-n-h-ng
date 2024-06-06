@@ -12,7 +12,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.thuydev.app_ban_an.Account.Account;
 import com.thuydev.app_ban_an.Adapter.XacNhanDonHangAdapter;
+import com.thuydev.app_ban_an.DTO.Bill;
 import com.thuydev.app_ban_an.DTO.BillDetail;
 import com.thuydev.app_ban_an.Interface.ProductInterface;
 import com.thuydev.app_ban_an.R;
@@ -26,8 +28,11 @@ import retrofit2.Response;
 
 public class fragment_quanlyhoadon_nhanvien extends Fragment {
     RecyclerView recyclerView;
+
     List<BillDetail> detailList;
+
     String TAG = "vvvvvvvvvvv";
+    List<Account>lists ;
     XacNhanDonHangAdapter xacNhanDonHangAdapter;
     @Nullable
     @Override
@@ -37,10 +42,10 @@ public class fragment_quanlyhoadon_nhanvien extends Fragment {
 
 
         detailList = new ArrayList<>();
-
+        lists = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        xacNhanDonHangAdapter = new XacNhanDonHangAdapter(getContext(), detailList);
+        xacNhanDonHangAdapter = new XacNhanDonHangAdapter(getContext(), detailList,lists);
         recyclerView.setAdapter(xacNhanDonHangAdapter);
 
         GetAllProducs();
@@ -57,8 +62,8 @@ public class fragment_quanlyhoadon_nhanvien extends Fragment {
                     // cập nhật vào list và hiển th lên danh sach
                     detailList.clear();
                     detailList.addAll(response.body() ); //
+                    GetAccount();
 
-                    xacNhanDonHangAdapter.notifyDataSetChanged();
                 }else{
                     Log.d(TAG, "onResponse: khong lay duoc du lieu");
                 }
@@ -73,4 +78,24 @@ public class fragment_quanlyhoadon_nhanvien extends Fragment {
         });
     }
 
+
+
+    private void GetAccount() {
+        Call<List<Account>> call = ProductInterface.GETAPI().GetListAccount();
+        call.enqueue(new Callback<List<Account>>() {
+            @Override
+            public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                if (response.isSuccessful()) {
+                    lists.clear();
+                    lists.addAll(response.body());
+                    xacNhanDonHangAdapter.notifyDataSetChanged();
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Account>> call, Throwable throwable) {
+
+            }
+        });
+
+    }
 }

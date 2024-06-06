@@ -1,11 +1,14 @@
 package com.thuydev.app_ban_an.Account;
 
+import android.util.Log;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Account {
     String _id, Email, Password, FullName,NumberPhone,Avatar,MyAddress;
     int Status,Credit,Level;
-    List<String> Address;
+    List<String> Address = new ArrayList<>();
     public Account account = this;
 
     public Account() {
@@ -37,7 +40,9 @@ public class Account {
     }
 
     public void setAddress(List<String> address) {
-        Address = address;
+        Address =  address ;
+        Log.e("TAG", "setAddress1: "+address );
+        Log.e("TAG", "setAddress2: "+Address );
     }
 
     public String get_id() {
@@ -111,12 +116,14 @@ public class Account {
     @Override
     public String toString() {
         return "Account{" +
-                "_id='" + _id + '\'' +
-                ", Email='" + Email + '\'' +
+                "Email='" + Email + '\'' +
                 ", FullName='" + FullName + '\'' +
                 ", NumberPhone='" + NumberPhone + '\'' +
-                ", Avatar='" + Avatar + '\'' +
                 ", MyAddress='" + MyAddress + '\'' +
+                ", Status=" + Status +
+                ", Credit=" + Credit +
+                ", Level=" + Level +
+                ", Address=" + Address +
                 '}';
     }
 }

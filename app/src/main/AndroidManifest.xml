@@ -23,15 +23,17 @@
             android:exported="false" />
         <activity
             android:name=".DangNhap"
-            android:exported="false"/>
-        <activity
-            android:name=".ManHinhNhanVien"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ManHinhNhanVien"
+            android:exported="true">
+
         </activity>
         <activity
             android:name=".DangKy"
@@ -42,6 +44,8 @@
 
         </activity>
         <activity android:name=".ProfileUser"
+            android:exported="false"/>
+        <activity android:name=".ShowProductFromCate"
             android:exported="false"/>
     </application>
 

@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 
 import com.thuydev.app_ban_an.DTO.ProductDTO;
 import com.thuydev.app_ban_an.Extentions.Extention;
+import com.thuydev.app_ban_an.Interface.ProductInterface;
 import com.thuydev.app_ban_an.R;
 
 
@@ -43,12 +44,22 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ProductDTO dto = list.get(position);
         if (dto != null){
-           Glide.with(context).load(dto.getImage())
-                   .error(R.drawable.shape_btn)
-                   .into(holder.imv_anh_sp_cuahang);
+            if(dto.getImage().contains("https:")||dto.getImage().contains("http:")){
+                Glide.with(context).load(dto.getImage())
+                        .error(R.drawable.shape_btn)
+                        .into(holder.imv_anh_sp_cuahang);
+                Log.e("TAG", "onBindViewHolder1: "+dto.getImage() );
+            }else {
+                Glide.with(context).load(ProductInterface.BASE_URL_IMAGE +dto.getImage())
+                        .error(R.drawable.shape_btn)
+                        .into(holder.imv_anh_sp_cuahang);
+                Log.e("TAG", "onBindViewHolder2: "+dto.getImage() );
+            }
+
             holder.tv_tensp_cuahang.setText(dto.getNameProduct());
             holder.tv_giasp_cuahang.setText(Extention.MakeStyleMoney(dto.getPrice()));
         }
+
     }
     @Override
     public int getItemCount() {

@@ -86,7 +86,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder>{
         CategoryDTO tempCate = GetCate(tempPro.getIDCategory());
         CheckNull(tempPro,tempCate);
         Log.e("TAG", "onBindViewHolder: "+tempPro );
-        Glide.with(context).load(tempPro.getImage()).error(R.drawable.logo2).into(binding.imvAnhSpGioHang);
+        if(tempPro.getImage().contains("https:")||tempPro.getImage().contains("http:")){
+            Glide.with(context).load(tempPro.getImage())
+                    .error(R.drawable.shape_btn)
+                    .into(holder.anh);
+        }else {
+            Glide.with(context).load(ProductInterface.BASE_URL_IMAGE +tempPro.getImage())
+                    .error(R.drawable.shape_btn)
+                    .into(holder.anh);
+        }
         holder.tenSP.setText(tempPro.getNameProduct());
         holder.thuongHieu.setText(tempCate.getNameCategory());
         holder.kichCo.setText("Kích cỡ: "+list.get(position).getSize());
@@ -107,6 +115,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder>{
     }
 
     private void Mua(int position) {
+        if (fragmentGiohang.CheckAddressUser()){
+            Toast.makeText(context, "Bạn phải điền địa chỉ trong Quản lý người dùng > Địa chỉ ", Toast.LENGTH_SHORT).show();
+            return;
+        }
         List<ProductCart> listCartPro = new ArrayList<>();
         List<String> listIDCart = new ArrayList<>();
         HashMap<String,Object> data = new HashMap<>();
@@ -118,7 +130,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder>{
         int thang = lich.get(Calendar.MONTH) + 1;
         int nam = lich.get(Calendar.YEAR);
         String ngayMua = String.format("%02d/%02d/%02d",nam,thang,ngay);
-        listCartPro.add(new ProductCart(cartDTO.getIDProduct(),cartDTO.getAmount(),tempPro.getPrice()));
+        listCartPro.add(new ProductCart(cartDTO.getIDProduct(),cartDTO.getSize(),cartDTO.getAmount(),tempPro.getPrice()));
         data.put("IDUser",cartDTO.getIDUser());
         data.put("IDSeller","?");
         data.put("IDProduct",listCartPro);

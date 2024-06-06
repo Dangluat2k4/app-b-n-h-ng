@@ -11,6 +11,7 @@ import com.thuydev.app_ban_an.DTO.CartDTO;
 import com.thuydev.app_ban_an.DTO.CategoryDTO;
 import com.thuydev.app_ban_an.DTO.ProductDTO;
 import com.thuydev.app_ban_an.DTO.ProductDetailDTO;
+import com.thuydev.app_ban_an.DTO.Recharge;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,7 @@ import retrofit2.http.Path;
 
 public interface ProductInterface {
     public static String BASE_URL = "http://10.0.2.2:3000/";
+    public static String BASE_URL_IMAGE = "http://10.0.2.2:3000";
     public static String diachi = "dia chi Fake";
 
     public static ProductInterface GETAPI() {
@@ -64,7 +66,8 @@ public interface ProductInterface {
 
     @GET("apiuser/category")
     Call<List<CategoryDTO>> GetListCategory();
-
+    @GET("apiuser/category/{id}")
+    Call<CategoryDTO> GetCategory(@Path("id")String id);
     @GET("apiuser/product/category/{id}")
     Call<List<ProductDTO>> GetListProductToCate(@Path("id") String id);
 
@@ -84,37 +87,18 @@ public interface ProductInterface {
     Call<String> AddBill(@Body HashMap<String, Object> Data);
 
     @GET("apiuser/user/bill/{id}")
-
-    Call<List<Bill>> GetBills(@Path("id")String id);
-    @GET("apiuser/user/billdetail/{id}")
-    Call<List<BillDetail>> GetBillDetails(@Path("id")String id);
-    @DELETE("apiuser/user/bill/delete/{id}")
-    Call<String> DeleteBill(@Path("id")String id);
-
+    Call<List<Bill>> GetBills(@Path("id") String id);
+    @GET("apiuser/bill/{id}")
+    Call<Bill> GetBill(@Path("id") String id);
     @GET("apiuser/user/billdetail/{id}")
     Call<List<BillDetail>> GetBillDetails(@Path("id") String id);
-
-
- @POST("apiuser/login")
- Call<Account> login(@Body Account account);
- @GET("apiuser/Account")
- Call<List<Account>> GetListAccount();
- @GET("apiuser/DsBill")
- Call<List<BillDetail>> GetListxacnhan();
-
+    @GET("apiuser/user/billdetail/{id}/{firt}/{end}")
+    Call<List<BillDetail>> GetBillDetailsToMonth(@Path("id") String id,@Path("firt")String firt,@Path("end")String end);
     @POST("apiuser/Reg")
     Call<Accountfeedback> accountfeedback(@Body Account account);
 
     @POST("apiuser/login")
     Call<Account> login(@Body Account account);
-
-
- // xóa ẩn(đổi status)
- @PUT("apiuser/xoahoadon/{id}")
- Call<Void> Xoahoadon(@Path("id") String id);
- @PUT("apiuser/chapnhanhoadon/{id}")
- Call<Void> chapnhanhoadon(@Path("id") String id);
-
 
     @PUT("apiuser/changepassword")
     Call<ResponseBody> changePassword(@Body ChangePasswordRequest request);
@@ -130,4 +114,23 @@ public interface ProductInterface {
                                @Part("FullName") RequestBody FullName,
                                @Part("NumberPhone") RequestBody NumberPhone);
 
+    @GET("apiuser/Account")
+    Call<List<Account>> GetListAccount();
+    @GET("apiuser/DsBill")
+    Call<List<BillDetail>> GetListxacnhan();
+    // xóa ẩn(đổi status)
+    @PUT("apiuser/xoahoadon/{id}")
+    Call<Void> Xoahoadon(@Path("id") String id,@Body()Bill bill);
+    @PUT("apiuser/chapnhanhoadon/{id}")
+    Call<Void> chapnhanhoadon(@Path("id") String id,@Body()Bill bill );
+
+    @Multipart
+    @POST("apiuser/user/recharge")
+    Call<String> YeuCauNap(@Part() MultipartBody.Part image,
+                           @Part("Email") RequestBody Email,
+                           @Part("IDUser") RequestBody IDUser,
+                           @Part("Money") RequestBody Money,
+                           @Part("Time") RequestBody Time);
+    @GET("apiuser/user/recharge/{id}")
+    Call<List<Recharge>> GetRecharge(@Path("id")String id);
 }

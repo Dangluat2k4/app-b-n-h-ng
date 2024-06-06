@@ -3,6 +3,7 @@ package com.thuydev.app_ban_an;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -11,7 +12,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -30,21 +34,29 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.thuydev.app_ban_an.Account.Account;
 import com.thuydev.app_ban_an.Account.ChangePasswordRequest;
+import com.thuydev.app_ban_an.Adapter.Adapter_diachi;
 import com.thuydev.app_ban_an.Adapter.Adapter_thongtin;
 import com.thuydev.app_ban_an.Adapter.BillAdapter;
+import com.thuydev.app_ban_an.Adapter.RechargeAdapter;
 import com.thuydev.app_ban_an.DTO.Bill;
 import com.thuydev.app_ban_an.DTO.BillDetail;
+import com.thuydev.app_ban_an.DTO.Recharge;
 import com.thuydev.app_ban_an.Extentions.Extention;
-import com.thuydev.app_ban_an.Interface.IUpdateData;
+import com.thuydev.app_ban_an.Extentions.RegexCheckName;
 import com.thuydev.app_ban_an.Interface.ProductInterface;
 import com.thuydev.app_ban_an.databinding.ActivityThongtintaikhoanBinding;
 import com.thuydev.app_ban_an.databinding.DialogDoiMatKhauBinding;
 import com.thuydev.app_ban_an.databinding.DialogLichsuBinding;
+import com.thuydev.app_ban_an.databinding.DialogNaptienBinding;
+import com.thuydev.app_ban_an.databinding.DialogThemHangBinding;
 import com.thuydev.app_ban_an.databinding.DialogUpdateprofileBinding;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -53,7 +65,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Multipart;
 
 
 public class ProfileUser extends AppCompatActivity {
@@ -63,7 +74,8 @@ public class ProfileUser extends AppCompatActivity {
     TabLayoutMediator mediator;
     Account user;
     Uri uri = null;
-    ImageView tempAvatar;
+    ImageView tempAvatar, tempBill;
+    int change = 0, isNapTien = 0;
     private static final int CODE_QUYEN = 1;
 
     @Override
@@ -76,6 +88,83 @@ public class ProfileUser extends AppCompatActivity {
         ShowDataHeader();
         ShowTab();
         HeaderData();
+        binding.llNaptien.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NapTien();
+            }
+        });
+    }
+
+    private void NapTien() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        DialogNaptienBinding binding1 = DialogNaptienBinding.inflate(getLayoutInflater());
+        builder.setView(binding1.getRoot());
+        Dialog dialog = builder.create();
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        tempBill = binding1.imvAnhchupmanhinh;
+        binding1.btnHuyYc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        binding1.imvAnhchupmanhinh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                yeucauquyen(ProfileUser.this);
+                isNapTien = 0;
+            }
+        });
+        binding1.btnGui.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(binding1.edtSotien.getText().toString().isEmpty()||binding1.edtEmailNaptien.getText().toString().isEmpty())
+                {
+                    Toast.makeText(ProfileUser.this, "Không được để trống", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                String time =String.format("%02d/%02d/%02d", Calendar.getInstance().get(Calendar.DAY_OF_MONTH), (Calendar.getInstance().get(Calendar.MONTH)+1), Calendar.getInstance().get(Calendar.YEAR)) +"/ - "+
+                        String.format("%02d:%02d:%02d",new Date().getHours(),new Date().getMinutes(),new Date().getSeconds());
+                String email = binding1.edtEmailNaptien.getText().toString();
+                if(RegexCheckName.CheckRegex(RegexCheckName.CheckEmail,email)){
+                    Toast.makeText(ProfileUser.this, "Hãy nhập nhập đúng email", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(Long.parseLong(binding1.edtSotien.getText().toString())<=100000){
+                    Toast.makeText(ProfileUser.this, "Số tiền naạp phải trên 100.000 đ", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(uri==null){
+                    Toast.makeText(ProfileUser.this, "Bạn phải chọn ảnh", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                File file = new File(Extention.getRealPath(ProfileUser.this,uri));
+               Call<String> call = ProductInterface.GETAPI().YeuCauNap(
+                       UpImage("imgAnh",file.getName(),ChangTypeFile(file)),
+                       ChangTypeFile(email),
+                       ChangTypeFile(user.get_id()),
+                       ChangTypeFile(binding1.edtSotien.getText().toString()),
+                       ChangTypeFile(time)
+               );
+               call.enqueue(new Callback<String>() {
+                   @Override
+                   public void onResponse(Call<String> call, Response<String> response) {
+                       if(response.isSuccessful())
+                           Toast.makeText(ProfileUser.this, response.body(), Toast.LENGTH_SHORT).show();
+                       dialog.dismiss();
+                       uri=null;
+                       dialog.dismiss();
+                   }
+
+                   @Override
+                   public void onFailure(Call<String> call, Throwable throwable) {
+
+                   }
+               });
+            }
+        });
     }
 
 
@@ -97,10 +186,10 @@ public class ProfileUser extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 UpdateProfile();
+                isNapTien = 1;
             }
         });
     }
-
 
     private void ShowTab() {
         adapterThongtin = new Adapter_thongtin(this);
@@ -118,7 +207,7 @@ public class ProfileUser extends AppCompatActivity {
         mediator.attach();
     }
 
-    private void GetBill(List<Bill> billList, List<BillDetail> billDetails, BillAdapter billAdapter) {
+    public void GetBill(List<Bill> billList, List<BillDetail> billDetails, BillAdapter billAdapter) {
         Call<List<Bill>> call = ProductInterface.GETAPI().GetBills(user.get_id());
         call.enqueue(new Callback<List<Bill>>() {
             @Override
@@ -223,6 +312,18 @@ public class ProfileUser extends AppCompatActivity {
                     Toast.makeText(ProfileUser.this, "Không được để trống", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (CheckRegex(RegexCheckName.CheckPhone, numPhome)) {
+                    Toast.makeText(ProfileUser.this, "Số điện thoại không đúng vui lòng nhập lại ", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (CheckRegex(RegexCheckName.CheckEmail, email)) {
+                    Toast.makeText(ProfileUser.this, "Email không đúng vui lòng nhập lại ", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (name.length() <= 5) {
+                    Toast.makeText(ProfileUser.this, "Tên của bạn phải trên 5 ký tự ", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (uri == null) {
                     Account newAcc = new Account();
                     newAcc.setEmail(email);
@@ -232,9 +333,20 @@ public class ProfileUser extends AppCompatActivity {
                 } else {
                     UpdateImg(email, name, numPhome);
                 }
-            dialog.dismiss();
+                dialog.dismiss();
             }
         });
+    }
+
+    private boolean CheckRegex(String regex, String input) {
+        return !Pattern.compile(regex).matcher(input).matches();
+    }
+
+    private void SaveAccount(String email) {
+        SharedPreferences sharedPreferences = getSharedPreferences("Data", MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString("Username", email);
+        edit.apply();
     }
 
     private void UpdateImg(String email, String name, String numPhome) {
@@ -250,9 +362,11 @@ public class ProfileUser extends AppCompatActivity {
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful())
                     Toast.makeText(ProfileUser.this, response.body(), Toast.LENGTH_SHORT).show();
+                SaveAccount(email);
+                DangNhap.dangNhap.CheckData();
                 DangNhap.dangNhap.iUpdateData.UpdateData(ProfileUser.this);
                 ShowDataHeader();
-                uri =null;
+                uri = null;
 
 
             }
@@ -282,6 +396,8 @@ public class ProfileUser extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
+                    SaveAccount(newAcc.getEmail());
+                    DangNhap.dangNhap.CheckData();
                     Toast.makeText(ProfileUser.this, response.body(), Toast.LENGTH_SHORT).show();
                     DangNhap.dangNhap.iUpdateData.UpdateData(ProfileUser.this);
 
@@ -296,8 +412,94 @@ public class ProfileUser extends AppCompatActivity {
         });
     }
 
-    public void DiaChi() {
+    private void XoaDiaChi(List<String> list_diaChi, int position, Adapter_diachi adapter) {
+        android.app.AlertDialog.Builder builder1 = new android.app.AlertDialog.Builder(this);
+        builder1.setTitle("Cảnh báo").setIcon(R.drawable.cancel).setMessage("Nếu bạn xác nhận dữ liệu sẽ mất mãi mãi");
+        builder1.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder1.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // xóa phần tử list ở đây
+                list_diaChi.remove(position);
+                user.setAddress(list_diaChi);
+                adapter.notifyDataSetChanged();
+                UpdateNoneImg(user);
+                Toast.makeText(ProfileUser.this, "Xóa thành công", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder1.create().show();
+    }
 
+    private void ChonDiaChiGiaoHang(List<String> listDiaChi, int position) {
+        user.setMyAddress(listDiaChi.get(position));
+        UpdateNoneImg(user);
+    }
+
+    private void AdiaChi(EditText edt_diachi, Adapter_diachi adapter, List<String> listDiaChi) {
+        Log.e("TAG", "AdiaChi: " + change);
+        if (change == 0) {
+            edt_diachi.setVisibility(View.VISIBLE);
+            change = 1;
+        } else {
+            if (edt_diachi.getText().toString().isEmpty()) {
+                Toast.makeText(this, "Người dùng không được để trống", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            edt_diachi.setVisibility(View.GONE);
+            change = 0;
+            listDiaChi.add(edt_diachi.getText().toString().trim());
+            adapter.notifyDataSetChanged();
+            user.setMyAddress(edt_diachi.getText().toString().trim());
+            user.setAddress(listDiaChi);
+            UpdateNoneImg(user);
+            edt_diachi.setText("");
+        }
+    }
+
+
+    public void DiaChi() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        DialogThemHangBinding binding1 = DialogThemHangBinding.inflate(getLayoutInflater());
+        builder.setView(binding1.getRoot());
+        Dialog dialog = builder.create();
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        // viet code o day
+        final int change = 0;
+        binding1.edtThemhang.setHint("Số nhà,Ngõ,Đường,Quận,Thành Phố");
+        binding1.tvTittle2.setText("Địa chỉ");
+        binding1.edtThemhang.setVisibility(View.GONE);
+        List<String> list_diaChi = new ArrayList<>();
+        if (user.getAddress() != null) {
+            list_diaChi.addAll(user.getAddress());
+        }
+        Adapter_diachi adapter = new Adapter_diachi(list_diaChi, this);
+        binding1.listHang.setAdapter(adapter);
+        binding1.listHang.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                XoaDiaChi(list_diaChi, position, adapter);
+                return false;
+            }
+        });
+        binding1.listHang.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ChonDiaChiGiaoHang(list_diaChi, position);
+                dialog.dismiss();
+            }
+        });
+        binding1.ibtnAddhang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdiaChi(binding1.edtThemhang, adapter, list_diaChi);
+            }
+        });
     }
 
     public void LichSuMuaHang() {
@@ -337,13 +539,41 @@ public class ProfileUser extends AppCompatActivity {
         });
     }
 
-    ;
-
     public void LichSuNap() {
-
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        DialogLichsuBinding binding1 = DialogLichsuBinding.inflate(getLayoutInflater());
+        builder.setView(binding1.getRoot());
+        Dialog dialog = builder.create();
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        // viet code o day
+        binding1.title.setText("Lịch sử nạp");
+        List<Recharge> list = new ArrayList<>();
+        RechargeAdapter rechargeAdapter = new RechargeAdapter(list,this);
+        binding1.rcvListLichsu.setAdapter(rechargeAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        binding1.rcvListLichsu.setLayoutManager(layoutManager);
+        GetLichSuNap(list,rechargeAdapter);
     }
 
-    ;
+    private void GetLichSuNap(List<Recharge> list, RechargeAdapter rechargeAdapter) {
+        Call<List<Recharge>> call = ProductInterface.GETAPI().GetRecharge(user.get_id());
+        call.enqueue(new Callback<List<Recharge>>() {
+            @Override
+            public void onResponse(Call<List<Recharge>> call, Response<List<Recharge>> response) {
+                if(response.isSuccessful()){
+                    list.clear();
+                    list.addAll(response.body());
+                    rechargeAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Recharge>> call, Throwable throwable) {
+
+            }
+        });
+    }
 
     public void KhoanChiTrongThang() {
 
@@ -402,8 +632,13 @@ public class ProfileUser extends AppCompatActivity {
                             return;
                         }
                         uri = intent.getData();
-                        Glide.with(ProfileUser.this).load(uri).into(tempAvatar);
-                        //
+                        if (isNapTien == 1) {
+                            Glide.with(ProfileUser.this).load(uri).into(tempAvatar);
+                            //
+                        } else {
+                            Glide.with(ProfileUser.this).load(uri).into(tempBill);
+                        }
+
                     }
 
                 }

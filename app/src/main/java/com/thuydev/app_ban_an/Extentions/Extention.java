@@ -20,7 +20,10 @@ public class Extention {
 
         return NumberFormat.getNumberInstance(Locale.getDefault()).format(price);
     }
+    public static String MakeStyleMoney(Long price) {
 
+        return NumberFormat.getNumberInstance(Locale.getDefault()).format(price);
+    }
 
 
     public static String getRealPath(Context context, Uri fileUri) {
