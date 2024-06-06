@@ -1,6 +1,6 @@
 
 const Bill = require("../model/Bill")
-const BillDetail = require("../model/BillDetail")
+const {BillDetail} = require("../model/BillDetail")
 const Cart = require("../model/Cart")
 const Category = require("../model/Category")
 const Product = require("../model/Product")
@@ -8,6 +8,7 @@ const ProductDetail = require("../model/ProductDetail")
 const fs = require('fs');// thư viện sử lý file
 const { Account } = require("../model/Account");
 const bcrypt = require("bcrypt");
+const { Recharge } = require("../model/Recharge")
 
 
 exports.renderAddProductForm = async (req, res, next) => {
@@ -424,7 +425,6 @@ exports.getHoaDonDuyet = async (req, res, next) => {
                 Amount: bill.Amount
             };
         });
-
         res.render('billdetail/bill-daduyet', { listBillDuyet: list });
     } catch (error) {
         console.log(error)
@@ -492,6 +492,89 @@ exports.getAllHoaDon = async (req, res, next) => {
         return res.status(400).send(error);
     }
 };
+exports.getRecharge = async (req, res, next) => {
+    console.log("lay du lieu thanh cong")
+    try {
+        let list = await Recharge.find({ Status: 0 }).select('ID Image IDUser Email Money Time Status');
+        let userIds = list.map(recharge => recharge.IDUser);
+        let users = await Account.find({ _id: { $in: userIds } }).select('FullName');
 
+        list = list.map(recharge => {
+            let user = users.find(user => user._id.toString() === recharge.IDUser.toString());
+            return {
+                _id: recharge._id,
+                Image: recharge.Image,
+                FullName: user ? user.FullName : 'Không có dữ liệu',
+                Email: recharge.Email,
+                Money: recharge.Money,
+                Time: recharge.Time,
+                Status: recharge.Status,
+            };
+        });
+        res.render('recharge/recharge-list', { listRcg: list });
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send(error);
+    }
+}
 
+exports.confirmRecharge = async (req, res) => {
+    try {
+        const { rechargeId } = req.params;
 
+        const recharge = await Recharge.findById(rechargeId);
+        if (!recharge) {
+            return res.status(404).json({ message: "Giao dịch không tồn tại" });
+        }
+
+        if (recharge.Status !== 0) {
+            return res.status(400).json({ message: "Giao dịch đã được xử lý" });
+        }
+
+        const account = await Account.findById(recharge.IDUser);
+        if (!account) {
+            return res.status(404).json({ message: "Tài khoản không tồn tại" });
+        }
+
+        // In ra giá trị trước khi cộng dồn
+        console.log(`Số dư hiện tại: ${account.Credit}`);
+        console.log(`Số tiền nạp: ${recharge.Money}`);
+
+        // Cộng dồn số tiền nạp vào tài khoản
+        account.Credit += recharge.Money;
+
+        // In ra giá trị sau khi cộng dồn
+        console.log(`Số dư sau khi nạp: ${account.Credit}`);
+
+        await account.save();
+
+        recharge.Status = 1; // Trạng thái 1: Confirmed
+        await recharge.save();
+
+        return res.status(200).json({ message: "Xác nhận giao dịch thành công" });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+// từ chối nạp tiền
+exports.rejectRecharge = async (req, res) => {
+    try {
+        const { rechargeId } = req.params;
+
+        const recharge = await Recharge.findById(rechargeId);
+        if (!recharge) {
+            return res.status(404).json({ message: "Giao dịch không tồn tại" });
+        }
+
+        if (recharge.Status !== 0) {
+            return res.status(400).json({ message: "Giao dịch không ở trạng thái chờ xử lý" });
+        }
+
+        recharge.Status = 2; // Trạng thái 2: Rejected
+        await recharge.save();
+
+        return res.status(200).json({ message: "Từ chối giao dịch thành công" });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
