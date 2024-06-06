@@ -38,6 +38,12 @@ router.get('/billDaDuyet', ctrl.getHoaDonDuyet);
 router.get('/billTuChoi', ctrl.getHoaDonTuChoi);
 router.get('/allbill', ctrl.getAllHoaDon);
 
+router.get('/listRecharge', ctrl.getRecharge);
+router.post('/:rechargeId/confirm', ctrl.confirmRecharge)
+router.post('/:rechargeId/reject', ctrl.rejectRecharge);
+
+
+
 
 
 
