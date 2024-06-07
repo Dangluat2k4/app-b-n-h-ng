@@ -10,39 +10,45 @@
 
 <body>
     <%- include('../inc/header') %>
-    <h1>Danh sách khách hàng </h1>
-        <table border="1" class="table table-bordered border-black w-100">
-            <thead>
-                <tr>
-                    <th scope="col" style="width: 10%;">Email</th>
-                    <th scope="col" style="width: 10%;">Password</th>
-                    <th scope="col" style="width: 10%;">FullName</th>
-                    <th scope="col" style="width: 10%;">NumberPhone</th>
-                    <th scope="col" style="width: 10%;">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% listKH.forEach((row)=> { %>
-                    <tr>
-                        <td>
-                            <%= row.Email %>
-                        </td>
-                        <td>
-                            <%= row.Password %>
-                        </td>
-                        <td>
-                            <%= row.FullName %>
-                        </td>
-                        <td>
-                            <%= row.NumberPhone %>
-                        </td>
-                        <td>
-                            <%= row.Status %>
-                        </td>
-                    </tr>
-                    <% }) %>
-            </tbody>
-        </table>
+        <h2 style="text-align: center;"> Tài Khoản Khách Hàng </h2>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <table border="1" class="table table-bordered border-black w-100">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 10%;">Email</th>
+                                <th scope="col" style="width: 10%;">Password</th>
+                                <th scope="col" style="width: 10%;">FullName</th>
+                                <th scope="col" style="width: 10%;">NumberPhone</th>
+                                <th scope="col" style="width: 10%;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% listKH.forEach((row)=> { %>
+                                <tr>
+                                    <td>
+                                        <%= row.Email %>
+                                    </td>
+                                    <td>
+                                        <%= row.Password %>
+                                    </td>
+                                    <td>
+                                        <%= row.FullName %>
+                                    </td>
+                                    <td>
+                                        <%= row.NumberPhone %>
+                                    </td>
+                                    <td>
+                                        <%= row.Status %>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         <%- include('../inc/footer') %>
 </body>
 
