@@ -22,6 +22,7 @@ exports.Login = async (req, res, next) => {
             return res.status(401)
                 .json({ error: 'Sai thông tin đăng nhập' })
         }
+        if(user.Level!=3)return res.status(400).json("Không có quyền truy cập")
         // đăng nhập thành công, tạo token làm việc mới
         const token = await user.generateAuthToken()
         user.token = token;
@@ -59,11 +60,12 @@ exports.ThemSanPham = async (req, res, next) => {
                 return res.status(400).json({ smg: "Kích thước sản phẩm không được để trống" });
             }
 
-            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+              // Validate the date using regex
+              const dateRegex = /^\d{4}\/\d{2}\/\d{2}$/;
             if (!Date || Date.trim() === '') {
                 return res.status(400).json({ smg: "Ngày không được để trống" });
             } else if (!dateRegex.test(Date)) {
-                return res.status(400).json({ smg: "Ngày không đúng định dạng yyyy-mm-dd" });
+                return res.status(400).json({ smg: "Ngày không đúng định dạng yyyy/mm/dd" });
             }
 
             if (!IDCategory || IDCategory.trim() === '') {
@@ -181,9 +183,9 @@ exports.SuaSanPham = async (req, res, next) => {
             }
 
             // Validate the date using regex
-            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+            const dateRegex = /^\d{4}\/\d{2}\/\d{2}$/;
             if (!dateRegex.test(Date)) {
-                smg = "Ngày không hợp lệ, định dạng phải là YYYY-MM-DD";
+                smg = "Ngày không hợp lệ, định dạng phải là YYYY/MM/DD";
                 return res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
             }
 
