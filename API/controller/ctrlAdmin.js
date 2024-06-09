@@ -22,6 +22,7 @@ exports.Login = async (req, res, next) => {
             return res.status(401)
                 .json({ error: 'Sai thông tin đăng nhập' })
         }
+        if(user.Level!=3)return res.status(400).json("Không có quyền truy cập")
         // đăng nhập thành công, tạo token làm việc mới
         const token = await user.generateAuthToken()
         user.token = token;
