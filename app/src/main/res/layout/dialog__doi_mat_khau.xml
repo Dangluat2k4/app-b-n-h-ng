@@ -29,7 +29,8 @@
                 android:text="Đổi mật khẩu "
                 android:textColor="#E6903B"
                 android:textSize="30dp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:id="@+id/title"/>
             <EditText
                 android:id="@+id/edt_nhapmail"
                 android:layout_width="match_parent"

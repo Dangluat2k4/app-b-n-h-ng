@@ -18,6 +18,7 @@
         dialog {
 
             align-items: center;
+           
             justify-content: center;
             border: none;
             padding: 0;
@@ -36,7 +37,7 @@
 
 <body>
     <%- include('../inc/header') %>
-    <h2 style="text-align: center;">Nạp Tiền</h2>
+    <h2 style="text-align: center; color: rgb(255, 153, 0);">Nạp Tiền</h2>
 
     <div class="container">
         <div class="row">
@@ -55,11 +56,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% listRcg.forEach((bill) => { %>
+                        <% listRcg.forEach(bill => { %>
                             <tr>
                                 <td><%= bill._id %></td>
                                 <td class="text-center">
-                                    <img src="<%= bill.Image %>" width="100%" class="image-click" alt="Bill Image"/>
+                                    <img src="<%= bill.Image %>" width="200px" class="image-click" alt="Bill Image"  data-id="<%= bill._id %>" 
+                                    data-fullname="<%= bill.FullName %>"
+                                    data-email="<%= bill.Email %>"
+                                    data-money="<%= bill.Money %>"
+                                    data-time="<%= bill.Time %>"
+                                    data-status="<%= bill.Status %>" />
                                 </td>
                                 <td><%= bill.FullName %></td>
                                 <td><%= bill.Email %></td>
@@ -69,7 +75,7 @@
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
                                         <form action="/apiAdmin/<%= bill._id %>/confirm" method="post" class="recharge-form">
-                                            <button type="submit" class="btn btn-success" style="font-size: 15px;">Nạp tiền</button>
+                                            <button type="submit" class="btn btn-success" style="font-size: 15px;margin-right: 10px;">Nạp tiền</button>
                                         </form>
                                         <form action="/apiAdmin/<%= bill._id %>/reject" method="post" class="reject-form">
                                             <button type="submit" class="btn btn-danger" style="font-size: 15px;">Từ chối</button>
@@ -82,11 +88,14 @@
                 </table>
             </div>
         </div>
+        <dialog id="image-dialog" style="display: none; grid-template-columns: 30% 10% 50%; padding: 50px; width: 100%; height: 100%;">
+            <img id="dialog-image" style="width: 500px;" src="" alt="Phóng to ảnh" />
+            <div class="data" style="color: white;margin-left: 100px; grid-column: 3;">
+            </div>
+        </dialog>
     </div>
 
-    <dialog id="image-dialog">
-        <img id="dialog-image" src="" alt="Phóng to ảnh" />
-    </dialog>
+    
 
     <%- include('../inc/footer') %>
 
@@ -96,7 +105,7 @@
             const rejectForms = document.querySelectorAll('.reject-form');
             const imageDialog = document.getElementById('image-dialog');
             const dialogImage = document.getElementById('dialog-image');
-
+           
             rechargeForms.forEach(form => {
                 form.addEventListener('submit', function (event) {
                     event.preventDefault();
@@ -144,18 +153,39 @@
                         });
                 });
             });
-
+    function ShowData(imgElement){
+     const bill = {
+        _id: imgElement.getAttribute('data-id'),
+        FullName: imgElement.getAttribute('data-fullname'),
+        Email: imgElement.getAttribute('data-email'),
+        Money: imgElement.getAttribute('data-money'),
+        Time: imgElement.getAttribute('data-time'),
+        Status: imgElement.getAttribute('data-status')
+    };
+    var data = document.querySelector(".data")
+                    data.innerHTML = /*html*/`
+                        <h4>Email: ${bill.Email}</h4> 
+                        <h4>Fullname: ${bill.FullName} </h4> 
+                        <h4>Money: ${bill.Money}</h4> 
+                        <h4>Time: ${bill.Time}</h4> 
+                    `
+}
             document.querySelectorAll('.image-click').forEach(image => {
                 image.addEventListener('click', function () {
                     dialogImage.src = this.src;
+                    ShowData(this)
+                     imageDialog.style.display = "grid"
                     imageDialog.showModal();
                 });
             });
 
             imageDialog.addEventListener('click', function () {
                 imageDialog.close();
+                imageDialog.style.display = "none"
+
             });
         });
+    
     </script>
 </body>
 
