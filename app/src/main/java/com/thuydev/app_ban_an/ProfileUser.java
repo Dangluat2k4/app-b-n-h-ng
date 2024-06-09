@@ -609,7 +609,7 @@ public class ProfileUser extends AppCompatActivity {
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            String[] quyen = new String[]{android.Manifest.permission.READ_MEDIA_IMAGES};
+            String[] quyen = new String[]{android.Manifest.permission.READ_MEDIA_IMAGES,android.Manifest.permission.READ_MEDIA_AUDIO,android.Manifest.permission.READ_MEDIA_VIDEO};
             requestPermissions(quyen, CODE_QUYEN);
             return;
         }

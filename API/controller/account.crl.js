@@ -1,5 +1,5 @@
 const { Account } = require("../model/Account");
-
+const bcrypt = require("bcrypt");
 const ac = require("../model/Account");
 
 exports.ListAccout = async (req, res, next) => {
@@ -51,55 +51,47 @@ exports.addAccount = async (req, res, next) => {
     try {
         if (req.method === "POST") {
             console.log(req.body); // Kiểm tra dữ liệu req.body
-            let { Email, Password, FullName, NumberPhone, Level } = req.body;
+            let { Email, Password, FullName, NumberPhone } = req.body;
 
             if (!Email) {
                 smg = "Email không được bỏ trống";
-                return res.status(400).json({ smg: smg });
+                return res.render('account/add-account', { smg: smg });
             }
             if (!Password) {
                 smg = "Password không được bỏ trống";
-                return res.status(400).json({ smg: smg });
+                return res.render('account/add-account', { smg: smg });
             }
             if (!FullName) {
                 smg = "FullName không được bỏ trống";
-                return res.status(400).json({ smg: smg });
+                return res.render('account/add-account', { smg: smg });
             }
             if (!NumberPhone) {
                 smg = "NumberPhone không được bỏ trống ";
-                return res.status(400).json({ smg: smg });
+                return res.render('account/add-account', { smg: smg });
             }
-            if (!Level) {
-                smg = "Level Không được để trống";
-                return res.status(400).json({ smg: smg });
-            }
-
-
             if (!validateEmail(Email)) {
                 smg = "Email không hợp lệ";
-                return res.status(400).json({ smg: smg });
+                return res.render('account/add-account', { smg: smg });
             }
         
             if (!validatePassword(Password)) {
                 smg = "Password phải có ít nhất 6 ký tự";
-                return res.status(400).json({ smg: smg });
+                return res.render('account/add-account', { smg: smg });
             }
         
             if (!validatePhoneNumber(NumberPhone)) {
                 smg = "Số điện thoại không hợp lệ";
-                return res.status(400).json({ smg: smg });
+                return res.render('account/add-account', { smg: smg });
             }
 
-            let objAC = new Account;
-
+            let objAC = new Account(req.body);
+            const salt = await bcrypt.genSalt(10);
             // Đưa đối tượng vào cơ sở dữ liệu
             objAC.Email = Email;
-            objAC.Password = Password;
+            objAC.Password = await bcrypt.hash(req.body.Password, salt);;
             objAC.FullName = FullName;
             objAC.NumberPhone = NumberPhone;
-            objAC.Level = Number(Level);
-
-
+            objAC.Level = Number(1);
             objAC.Status = 1;
             smg = 'Thêm thành công, id mới = ' + objAC._id;
             await objAC.save();
@@ -125,27 +117,23 @@ exports.updateAC = async (req, res, next) => {
         }
         
         if (req.method == "POST") {
-            let { Email, Password, FullName, NumberPhone, Level } = req.body;
+            let { Email, Password, FullName, NumberPhone } = req.body;
 
             if (!Email) {
                 smg = "Email không được bỏ trống";
-                return res.status(400).json({ smg: smg });
+                return res.render('account/update-account', { smg: smg });
             }
             if (!Password) {
                 smg = "Password không được bỏ trống";
-                return res.status(400).json({ smg: smg });
+                return res.render('account/update-account', { smg: smg });
             }
             if (!FullName) {
                 smg = "FullName không được bỏ trống";
-                return res.status(400).json({ smg: smg });
+                return res.render('account/update-account', { smg: smg });
             }
             if (!NumberPhone) {
                 smg = "NumberPhone không được bỏ trống ";
-                return res.status(400).json({ smg: smg });
-            }
-            if (!Level) {
-                smg = "Level Không được để trống";
-                return res.status(400).json({ smg: smg });
+                return res.render('account/update-account', { smg: smg });
             }
 
             let objAC = {};
@@ -153,7 +141,7 @@ exports.updateAC = async (req, res, next) => {
             objAC.Password = Password;
             objAC.FullName = FullName;
             objAC.NumberPhone = NumberPhone;
-            objAC.Level = Level;
+            objAC.Level = 1;
 
 
             await Account.findByIdAndUpdate(req.params.id, objAC);

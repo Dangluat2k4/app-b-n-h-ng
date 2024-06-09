@@ -1,22 +1,29 @@
 package com.thuydev.app_ban_an;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.thuydev.app_ban_an.Account.Account;
+import com.thuydev.app_ban_an.Account.ChangePasswordRequest;
 import com.thuydev.app_ban_an.Interface.IUpdateData;
 import com.thuydev.app_ban_an.Interface.ProductInterface;
+import com.thuydev.app_ban_an.databinding.DialogDoiMatKhauBinding;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,6 +67,7 @@ public class DangNhap extends AppCompatActivity {
         btnDangNhap = findViewById(R.id.btn_dangnhap);
         btnDangKy = findViewById(R.id.btn_dangky);
         btnDangNhap.setOnClickListener(v -> dangNhap());
+        TextView quenPass = findViewById(R.id.tv_quenpass);
         CheckData();
         // Bắt sự kiện khi nhấn nút "Đăng ký"
         btnDangKy.setOnClickListener(v -> {
@@ -67,7 +75,12 @@ public class DangNhap extends AppCompatActivity {
             Intent intent = new Intent(DangNhap.this, DangKy.class);
             startActivity(intent);
         });
-
+        quenPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DoiMatKhau();
+            }
+        });
     }
 
     public void CheckData() {
@@ -118,6 +131,7 @@ public class DangNhap extends AppCompatActivity {
             @Override
             public void onFailure(Call<Account> call, Throwable t) {
                 // Xử lý lỗi khi gửi yêu cầu đăng nhập
+                Log.e("TAG", "onFailure: "+t );
                 Toast.makeText(DangNhap.this, "Đã xảy ra lỗi. Vui lòng kiểm tra kết nối và thử lại!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -146,5 +160,51 @@ public class DangNhap extends AppCompatActivity {
             }
         });
     }
+    public void DoiMatKhau() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        DialogDoiMatKhauBinding binding = DialogDoiMatKhauBinding.inflate(getLayoutInflater());
+        builder.setView(binding.getRoot());
+        Dialog dialog = builder.create();
+        dialog.show();
+        binding.title.setText("Quên mật khẩu");
 
+        binding.btnDoiMK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = binding.edtNhapmail.getText().toString().trim();
+                String newPassword = binding.edtNhapmkmoi.getText().toString().trim();
+                if (email.isEmpty() || newPassword.isEmpty()) {
+                    Toast.makeText(DangNhap.this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                changePassword(email, newPassword, dialog);
+            }
+        });
+    }
+    private void changePassword(String email, String newPassword, Dialog dialog) {
+        ChangePasswordRequest request = new ChangePasswordRequest(email, newPassword);
+        ProductInterface apiService = ProductInterface.GETAPI();
+        Call<ResponseBody> call = apiService.changePassword(request);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        Toast.makeText(DangNhap.this, "Mật khẩu đã được cập nhập", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(DangNhap.this, "Đổi mật khẩu thất bại", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText( DangNhap.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
+

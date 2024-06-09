@@ -6,6 +6,8 @@ var multer = require('multer');
 var objUpload = new multer({dest:'./tmp'});
 ;
 
+router.get("/login",ctrl.ScreenLogin)
+router.post("/login", ctrl.Login);
 router.get("/product",ctrl.XemDanhSachSanPham)
 
 router.get("/product/add", ctrl.ThemSanPham)
@@ -42,6 +44,7 @@ router.get('/listRecharge', ctrl.getRecharge);
 router.post('/:rechargeId/confirm', ctrl.confirmRecharge)
 router.post('/:rechargeId/reject', ctrl.rejectRecharge);
 
+router.post("/total/bill",ctrl.DanhSachBillDetailToMonth)
 
 
 
