@@ -1,8 +1,6 @@
 package com.thuydev.app_ban_an;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,13 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.thuydev.app_ban_an.frm.fragment_doimk_nhanvien;
-import com.thuydev.app_ban_an.frm.fragment_hotro_nhanvien;
+import com.thuydev.app_ban_an.frm.dialog_doipass;
 import com.thuydev.app_ban_an.frm.fragment_quanlygiay_nhanvien;
 import com.thuydev.app_ban_an.frm.fragment_quanlyhoadon_nhanvien;
 
@@ -54,13 +49,10 @@ public class ManHinhNhanVien extends AppCompatActivity {
                 } else if (item.getItemId() == R.id.menu_nhanvien_qlhd) {
                     replaceFragment(new fragment_quanlyhoadon_nhanvien());
                     getSupportActionBar().setTitle("Quản Lý Hóa Đơn");
-                } else if (item.getItemId() == R.id.menu_nhanvien_hotro) {
-                    replaceFragment(new fragment_hotro_nhanvien());
-                    getSupportActionBar().setTitle("Hỗ trợ khách hàng");
                 }
-                else if (item.getItemId() == R.id.menu_nhanvien_resetpass) {
-                    replaceFragment(new fragment_doimk_nhanvien());
-                    getSupportActionBar().setTitle("Đổi mật khẩu");
+                else  if (item.getItemId() == R.id.menu_nhanvien_resetpass) {
+                    dialog_doipass dialog = new dialog_doipass();
+                    dialog.show(getSupportFragmentManager(), "ChangePasswordDialog");
                 }
                 else {
                     Toast.makeText(ManHinhNhanVien.this, "Lỗi", Toast.LENGTH_SHORT).show();
