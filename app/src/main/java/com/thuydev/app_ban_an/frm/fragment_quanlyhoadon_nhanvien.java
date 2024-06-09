@@ -38,6 +38,13 @@ public class fragment_quanlyhoadon_nhanvien extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_frg_quan_ly_hoa_don, container, false);
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.rcv_quanLyHoaDon);
 
 
@@ -49,8 +56,9 @@ public class fragment_quanlyhoadon_nhanvien extends Fragment {
         recyclerView.setAdapter(xacNhanDonHangAdapter);
 
         GetAllProducs();
-        return view;
+
     }
+
     void GetAllProducs(){
         Call<List<BillDetail>> call = ProductInterface.GETAPI().GetListxacnhan();
 
@@ -59,6 +67,7 @@ public class fragment_quanlyhoadon_nhanvien extends Fragment {
             public void onResponse(Call<List<BillDetail>> call, Response<List<BillDetail>> response) {
                 if(response.isSuccessful()){
                     Log.d(TAG, "onResponse: lay du lieu thanh cong " + response.body().toString());
+
                     // cập nhật vào list và hiển th lên danh sach
                     detailList.clear();
                     detailList.addAll(response.body() ); //
@@ -89,10 +98,12 @@ public class fragment_quanlyhoadon_nhanvien extends Fragment {
                     lists.clear();
                     lists.addAll(response.body());
                     xacNhanDonHangAdapter.notifyDataSetChanged();
+
                 }
             }
             @Override
             public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                Log.d(TAG, "onResponse: gnrugbrurubgr " + throwable.getMessage());
 
             }
         });

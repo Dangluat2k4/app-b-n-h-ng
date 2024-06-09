@@ -4,7 +4,11 @@ const ac = require("../model/Account");
 
 exports.ListAccout = async (req, res, next) => {
     try {
-        let list = await Account.find({ Status: { $ne: 0 } });
+        let list = await Account.aggregate([{
+            $match: {
+                Level: { $gte:0, $lte:1}, Status: 1
+            }
+        }]);
         res.render('account/list-account', { listAC: list });
     } catch (error) {
         console.log(error);
@@ -14,7 +18,7 @@ exports.ListAccout = async (req, res, next) => {
 
 exports.ListAccoutNV = async (req, res, next) => {
     try {
-        let list = await Account.find({ Level: { $ne: 0 } });
+        let list = await Account.find({ Level: 1 });
         res.render('account/list-nhanVien', { listNV: list });
     } catch (error) {
         console.log(error);
@@ -24,7 +28,7 @@ exports.ListAccoutNV = async (req, res, next) => {
 
 exports.ListAccoutKH = async (req, res, next) => {
     try {
-        let list = await Account.find({ Level: { $ne: 1 } });
+        let list = await Account.find({ Level:0 });
         res.render('account/list-khachHang', { listKH: list });
     } catch (error) {
         console.log(error);
