@@ -98,10 +98,7 @@ public class fragment_quanlyhoadon_nhanvien extends Fragment {
                     lists.clear();
                     lists.addAll(response.body());
                     xacNhanDonHangAdapter.notifyDataSetChanged();
-                    Log.d(TAG, "onResponse: dfghjunuhduwdw " + response.body().toString());
 
-                }else {
-                    Log.d(TAG, "onResponse: fail " + response.body().toString());
                 }
             }
             @Override
