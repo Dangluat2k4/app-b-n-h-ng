@@ -119,7 +119,7 @@
                         })
                     }).then(res => res.json())
                         .then(res => {
-                           if(res==null){
+                           if(isNaN(res)){
                             totalValue.value = `Lỗi xảy ra  `
                            }else{
                            totalValue.value = `Total: ${res} VND `
