@@ -32,7 +32,7 @@ public class ShowDetailProduct extends AppCompatActivity {
     String idUser = "";
     List<String> listSize;
     SizeAdapter sizeAdapter;
-    int so = 0;
+    int so = 1;
     String id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,8 +187,8 @@ public class ShowDetailProduct extends AppCompatActivity {
     private void tinh(String dau) {
         if ("-".equals(dau)) {
             so -= 1;
-            if (so == -1) {
-                so = 0;
+            if (so == 0) {
+                so = 1;
             }
         } else {
             so += 1;

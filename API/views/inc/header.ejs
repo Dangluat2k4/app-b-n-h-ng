@@ -13,9 +13,10 @@
         }
 
         /* Thay đổi màu chữ của thẻ <a> khi được nhấn */
-        .nav-link:focus, .nav-link:active {
-            color: yellow !important;
+        .nav-link:focus, .nav-link:active,.nav-link:hover{
+            color: rgb(255, 170, 0) !important;
         }
+     
 
     </style>
 </head>
@@ -25,7 +26,7 @@
     <div class="mb-2">
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">WEB Server</a>
+                <a class="navbar-brand" style="font-size: xx-large; font-weight: bold; color: rgb(255, 174, 0);" href="#">WEB Server</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -33,7 +34,7 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
                     <ul class="navbar-nav mb-2 mb-lg-0">
-                        <li class="nav-item">
+                        <li class="nav-item ">
                             <a class="nav-link active" href="http://localhost:3000/apiAdmin/product" style="font-size: 25px;">Product</a>
                         </li>
                         <li class="nav-item">
@@ -46,17 +47,45 @@
                             <a class="nav-link active" aria-current="page" href="http://localhost:3000/apiAdmin/allbill"style="font-size: 25px;">Bill</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="http://localhost:3000/apiAdmin/listRecharge"style="font-size: 25px;">Recharge</a>
+                            <a class="nav-link active" aria-current="page"  href="http://localhost:3000/apiAdmin/listRecharge"style="font-size: 25px;">Recharge</a>
                         </li>
                     </ul>
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
+                    
                 </div>
             </div>
         </nav>
     </div>
+    <script>
+         document.addEventListener('DOMContentLoaded', (event) => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('No token found, please log in first.');
+                window.location.href = "/login";
+            } else {
+                console.log('Token found:', token);
+            }
+        });
+        async function fetchData(link) {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('No token found, please log in first.');
+                return;
+            }
+
+            const response = await fetch(`${link}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}` 
+                }
+            });
+
+            if (response.ok) {
+                const htmlContent = await response.text();
+                document.querySelector("body").innerHTML = htmlContent;
+            } else {
+                alert('Failed to fetch data');
+            }
+        }
+    </script>
 </body>
 
 </html>

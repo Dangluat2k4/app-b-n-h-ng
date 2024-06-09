@@ -10,7 +10,7 @@
 
 <body>
     <%- include('../inc/header') %>
-        <h2 style="text-align: center;"> Tài Khoản Khách Hàng </h2>
+        <h2 style="text-align: center; color: rgb(255, 153, 0);"> Danh sách khách hàng </h2>
         <div class="container">
             <div class="row">
                 <div class="col">
@@ -31,7 +31,7 @@
                                         <%= row.Email %>
                                     </td>
                                     <td>
-                                        <%= row.Password %>
+                                        <%= "*******************************" %>
                                     </td>
                                     <td>
                                         <%= row.FullName %>
@@ -40,7 +40,11 @@
                                         <%= row.NumberPhone %>
                                     </td>
                                     <td>
-                                        <%= row.Status %>
+                                        <% if (row.Status==0) { %>
+                                            <%= "Offline" %>
+                                        <% } else{ %>
+                                            <%="Online" %>
+                                        <% } %>
                                     </td>
                                 </tr>
                                 <% }) %>

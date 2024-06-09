@@ -10,26 +10,42 @@
 
 <body>
 
-    <h1>Thêm Account mới </h1>
+    <h1 style=" color: rgb(255, 153, 0);">Thêm Account mới </h1>
     <form action="" method="post" enctype="application/x-www-form-urlencoded" class="form-control w-75 m-lg-auto bg-secondary">
         Email : <input type="text" class="form-control" name="Email" id="Email"> <br>
-        Pass : <input type="text" class="form-control" name="Password" id="Password"> <br>
+        Pass : <input type="password" class="form-control" name="Password" id="Password"> <br>
         FullName: <input type="text" class="form-control" name="FullName" id="FullName"> <br>
-        NumberPhone: <input type="text" class="form-control" name="NumberPhone" id="NumberPhone"> <br>
-        <label>
-            <input type="radio" name="Level" value="0" checked> Level 0
-        </label>
-        <label>
-            <input type="radio" name="Level" value="1"> Level 1
-        </label>
-        
-        <br>
-        
-        <p>
+        NumberPhone: <input type="text" class="form-control" name="NumberPhone" id="NumberPhone"> <br>        
+        <p style="color: yellow;">
             <%= smg %>
         </p>
         <button type="submit" class="btn btn-primary text-center mt-1">Thêm mới</button>
     </form>
+    <script>
+        async function fetchData() {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                alert('No token found, please log in first.');
+                return;
+            }
+
+            const response = await fetch('/api/protected-data', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+            } else {
+                alert('Failed to fetch data');
+            }
+        }
+        fetchData()
+    </script>
 </body>
 
 </html>
