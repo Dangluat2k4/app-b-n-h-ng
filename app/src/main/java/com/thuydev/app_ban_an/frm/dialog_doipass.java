@@ -52,13 +52,7 @@ public class dialog_doipass  extends DialogFragment {
         });
 
 
-        builder.setView(view)
-                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+        builder.setView(view);
         return builder.create();
     }
     private void changePassword(String email, String newPass) {
