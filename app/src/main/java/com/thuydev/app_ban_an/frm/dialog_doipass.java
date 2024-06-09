@@ -1,68 +1,68 @@
 package com.thuydev.app_ban_an.frm;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.fragment.app.DialogFragment;
 
 import com.thuydev.app_ban_an.Account.ChangePasswordRequest;
 import com.thuydev.app_ban_an.Interface.ProductInterface;
 import com.thuydev.app_ban_an.R;
-import com.thuydev.app_ban_an.databinding.DialogDoiMatKhauBinding;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class fragment_doimk_nhanvien extends Fragment {
-    private Button btnOpenDialog;
-    @Nullable
+public class dialog_doipass  extends DialogFragment {
+    EditText edtemail, edtnewpass;
+    AppCompatButton btndoipass;
+
+    @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_doimk_nhanvien, container, false);
-        btnOpenDialog = view.findViewById(R.id.btn_open_dialog);
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog__doi_mat_khau, null);
 
-        btnOpenDialog.setOnClickListener(new View.OnClickListener() {
+        edtemail = view.findViewById(R.id.edt_nhapmail);
+        edtnewpass = view.findViewById(R.id.edt_nhapmkmoi);
+        btndoipass = view.findViewById(R.id.btn_doiMK);
+        btndoipass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openChangePasswordDialog();
-            }
-        });
-
-        return view;
-    }
-    private void openChangePasswordDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        DialogDoiMatKhauBinding binding = DialogDoiMatKhauBinding.inflate(getLayoutInflater());
-        builder.setView(binding.getRoot());
-        Dialog dialog = builder.create();
-        dialog.show();
-        binding.btnDoiMK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = binding.edtNhapmail.getText().toString().trim();
-                String newPassword = binding.edtNhapmkmoi.getText().toString().trim();
-                if (email.isEmpty() || newPassword.isEmpty()) {
+                // Xử lý logic đổi mật khẩu ở đây
+                String email = edtemail.getText().toString();
+                String newPass = edtnewpass.getText().toString();
+                if (email.isEmpty() || newPass.isEmpty()) {
                     Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                changePassword(email, newPassword,dialog);
+                changePassword(email, newPass);
             }
         });
 
+
+        builder.setView(view)
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        return builder.create();
     }
-    private void changePassword(String email, String newPassword,Dialog dialog) {
-        ChangePasswordRequest request = new ChangePasswordRequest(email, newPassword);
+    private void changePassword(String email, String newPass) {
+        ChangePasswordRequest request = new ChangePasswordRequest(email, newPass);
         ProductInterface apiService = ProductInterface.GETAPI();
         Call<ResponseBody> call = apiService.changePassword(request);
         call.enqueue(new Callback<ResponseBody>() {
@@ -71,7 +71,7 @@ public class fragment_doimk_nhanvien extends Fragment {
                 if (response.isSuccessful()) {
                     try {
                         Toast.makeText(getContext(), "Đổi mật khẩu thành công", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
+                        dismiss();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
