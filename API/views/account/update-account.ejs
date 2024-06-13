@@ -9,46 +9,30 @@
 
 <body>
     <div class="text-center">
-        <h1>Update Account </h1>
+        <h1 style=" color: rgb(255, 153, 0);">Update Account </h1>
         <form action="" method="post" class="form-control w-75 m-lg-auto bg-secondary">
-
             <% if(obj!=null){%>
-
                 <div class="input-group flex-nowrap mb-1">
                     <span class="input-group-text" id="addon-wrapping">Email </span>
                     <input type="text" class="form-control" placeholder="Email" aria-label="Email"
                         aria-describedby="addon-wrapping" name="Email" value="<%= obj.Email %>">
                 </div>
-
-                
                 <div class="input-group flex-nowrap mb-1">
                     <span class="input-group-text" id="addon-wrapping">Password </span>
                     <input type="text" class="form-control" placeholder="Password" aria-label="Password"
                         aria-describedby="addon-wrapping" name="Password" value="<%= obj.Password %>">
                 </div>
-
                 <div class="input-group flex-nowrap mb-1">
                     <span class="input-group-text" id="addon-wrapping">FullName </span>
                     <input type="text" class="form-control" placeholder="FullName" aria-label="FullName"
                         aria-describedby="addon-wrapping" name="FullName" value="<%= obj.FullName %>">
                 </div>
-
                 <div class="input-group flex-nowrap mb-1">
                     <span class="input-group-text" id="addon-wrapping">NumberPhone </span>
                     <input type="text" class="form-control" placeholder="Loại" aria-label="NumberPhone"
                         aria-describedby="addon-wrapping" name="NumberPhone" value="<%= obj.NumberPhone %>">
                 </div>
-                
-                <div class="input-group flex-nowrap mb-1">
-                    <label class="input-group-text" for="Level">Level</label>
-                    <select class="form-select" id="Level" name="Level">
-                        <option value="0" <% if (obj.Level === '0') { %>selected<% } %>>0</option>
-                        <option value="1" <% if (obj.Level === '1') { %>selected<% } %>>1</option>
-                    </select>
-                </div>
-                
-
-                <p>
+                <p style="color: yellow;">
                     <%= smg %>
                 </p>
                 <button type="submit" class="btn btn-primary text-center">Update </button>

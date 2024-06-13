@@ -10,39 +10,68 @@
 
 <body>
     <%- include('../inc/header') %>
-    <h1>Danh sách nhân viên </h1>
-        <table border="1" class="table table-bordered border-black w-100">
-            <thead>
-                <tr>
-                    <th scope="col" style="width: 10%;">Email</th>
-                    <th scope="col" style="width: 10%;">Password</th>
-                    <th scope="col" style="width: 10%;">FullName</th>
-                    <th scope="col" style="width: 10%;">NumberPhone</th>
-                    <th scope="col" style="width: 10%;">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% listNV.forEach((row)=> { %>
-                    <tr>
-                        <td>
-                            <%= row.Email %>
-                        </td>
-                        <td>
-                            <%= row.Password %>
-                        </td>
-                        <td>
-                            <%= row.FullName %>
-                        </td>
-                        <td>
-                            <%= row.NumberPhone %>
-                        </td>
-                        <td>
-                            <%= row.Status %>
-                        </td>
-                    </tr>
-                    <% }) %>
-            </tbody>
-        </table>
+        <h2 style="text-align: center; color: rgb(255, 153, 0);">Danh sách nhân viên </h2>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <a href="/account/account/add/">
+                        <button type="submit" class="btn btn-warning" style="margin-right: 10px;">Add new
+                            Acount </button>
+                    </a>
+                    <table border="1" class="table table-bordered border-black w-100">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 10%;">Email</th>
+                                <th scope="col" style="width: 10%;">Password</th>
+                                <th scope="col" style="width: 10%;">FullName</th>
+                                <th scope="col" style="width: 10%;">NumberPhone</th>
+                                <th scope="col" style="width: 10%;">Status</th>
+                                <th scope="col" style="width: 10%;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% listNV.forEach((row)=> { %>
+                                <tr>
+                                    <td>
+                                        <%= row.Email %>
+                                    </td>
+                                    <td>
+                                        <%= "*******************************" %>
+                                    </td>
+                                    <td>
+                                        <%= row.FullName %>
+                                    </td>
+                                    <td>
+                                        <%= row.NumberPhone %>
+                                    </td>
+                                    <td>
+                                        <% if (row.Status==0) { %>
+                                            <%= "Offline" %>
+                                        <% } else{ %>
+                                            <%="Online" %>
+                                        <% } %>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group">
+                                            <a href="/account/account/edit/<%= row._id %>">
+                                                <button type="submit" class="btn btn-warning w-100"
+                                                    style="margin-right: 10px;">Sửa</button>
+                                            </a>
+                                            <a>
+                                                <button type="button" class="btn btn-danger w-100"
+                                                    onclick="handleDelete('<%= row._id %>')"
+                                                    style="margin-left: 10px;">Xóa</button>
+                                            </a>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         <%- include('../inc/footer') %>
 </body>
 

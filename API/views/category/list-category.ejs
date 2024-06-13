@@ -10,40 +10,54 @@
 
 <body>
     <%- include('../inc/header') %>
-    <td>
-        <a href="/apiadmin/category/add">
-            <button type="submit" class="btn btn-success w-10"> Thêm </button>
-        </a>
-    </td>
-        <table border="1" class="table table-bordered border-black w-100 ">
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Category</th> 
-                <th scope="col">Action</th>
-            </tr>
-            <% listCTG.forEach( (row)=>{ %>
-                <tr>
+    <h2 style="text-align: center; color: rgb(255, 153, 0);">Loại</h2>
+        <div class="container">
+            <div class="row">
+                <div class="col">
                     <td>
-                        <%= row._id %>
+                        <a href="/apiadmin/category/add">
+                            <button type="submit" class="btn btn-warning"> Thêm </button>
+                        </a>
                     </td>
-                    <td>
-                        <%= row.NameCategory %>
-                    </td>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <table border="1" class="table table-bordered border-black w-100 ">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        <% listCTG.forEach( (row)=>{ %>
+                            <tr>
+                                <td>
+                                    <%= row._id %>
+                                </td>
+                                <td>
+                                    <%= row.NameCategory %>
+                                </td>
 
-                    <td class="text-center">
-                        <div class="btn-group" role="group">
-                            <a href="/apiadmin/category/edit/<%= row._id %>">
-                                <button type="submit" class="btn btn-warning w-100 " style="margin-right: 10px;"> Sửa </button>
-                            </a>
-                            <a href="/apiadmin/category/delete/<%= row._id %>"
-                                onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')" style="margin-left: 10px;"><button type="submit"
-                                    class="btn btn-danger w-100">Xóa</button></a>
-                        </div>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <a href="/apiadmin/category/edit/<%= row._id %>">
+                                            <button type="submit" class="btn btn-warning w-100 "
+                                                style="margin-right: 10px;"> Sửa </button>
+                                        </a>
+                                        <a href="/apiadmin/category/delete/<%= row._id %>"
+                                            onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')"
+                                            style="margin-left: 10px;"><button type="submit"
+                                                class="btn btn-danger w-100">Xóa</button></a>
+                                    </div>
 
-                    </td>
-                </tr>
-                <% }) %>
-        </table>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <%- include('../inc/footer') %>
 
 </body>

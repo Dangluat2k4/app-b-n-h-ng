@@ -1,5 +1,6 @@
 package com.thuydev.app_ban_an.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -104,7 +105,7 @@ public class XacNhanDonHangAdapter extends RecyclerView.Adapter<XacNhanDonHangAd
     }
 
     @Override
-    public void onBindViewHolder(@NonNull XacNhanDonHangAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull XacNhanDonHangAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         BillDetail detail = listsp.get(position);
         GetAccount(detail.getIDUser(), holder.tv_tenkh, holder.tv_sdt,holder.tv_diachi);
         holder.tv_idDon.setText("Ma hoa don: "+ detail.get_id());

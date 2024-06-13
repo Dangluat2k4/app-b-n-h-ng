@@ -1,6 +1,6 @@
 
 const Bill = require("../model/Bill")
-const {BillDetail} = require("../model/BillDetail")
+const { BillDetail } = require("../model/BillDetail")
 const Cart = require("../model/Cart")
 const Category = require("../model/Category")
 const Product = require("../model/Product")
@@ -8,9 +8,31 @@ const ProductDetail = require("../model/ProductDetail")
 const fs = require('fs');// thư viện sử lý file
 const { Account } = require("../model/Account");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');//  Cần chạy lệnh cài đặt: npm install jsonwebtoken --save
+ require('dotenv').config();
 const { Recharge } = require("../model/Recharge")
-
-
+exports.ScreenLogin = (req,res)=>{
+    res.render('Login/Login');
+}
+exports.Login = async (req, res, next) => {
+    try {
+        const user = await Account.findByCredentials(req.body.Email, req.body.Password)
+        
+        if (!user) {
+            return res.status(401)
+                .json({ error: 'Sai thông tin đăng nhập' })
+        }
+        if(user.Level!=3)return res.status(400).json("Không có quyền truy cập")
+        // đăng nhập thành công, tạo token làm việc mới
+        const token = await user.generateAuthToken()
+        user.token = token;
+        return res.status(200).send(user)
+    } catch (error) {
+        console.log(error,  " Pass " + req.body.Password)
+        return res.status(400).send({error:error,pass: "Sai pass"})
+    }
+    
+}
 exports.renderAddProductForm = async (req, res, next) => {
     try {
         let categories = await Category.Category.find();
@@ -29,29 +51,30 @@ exports.ThemSanPham = async (req, res, next) => {
             if (!NameProduct || NameProduct.trim() === '') {
                 return res.status(400).json({ smg: "Tên sản phẩm không được để trống" });
             }
-        
+
             if (!Price || Price.trim() === '') {
                 return res.status(400).json({ smg: "Giá sản phẩm không được để trống" });
             }
-        
+
             if (!Size || Size.trim() === '') {
                 return res.status(400).json({ smg: "Kích thước sản phẩm không được để trống" });
             }
-        
-            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+              // Validate the date using regex
+              const dateRegex = /^\d{4}\/\d{2}\/\d{2}$/;
             if (!Date || Date.trim() === '') {
                 return res.status(400).json({ smg: "Ngày không được để trống" });
             } else if (!dateRegex.test(Date)) {
-                return res.status(400).json({ smg: "Ngày không đúng định dạng yyyy-mm-dd" });
+                return res.status(400).json({ smg: "Ngày không đúng định dạng yyyy/mm/dd" });
             }
-        
+
             if (!IDCategory || IDCategory.trim() === '') {
                 return res.status(400).json({ smg: "Danh mục sản phẩm không được để trống" });
             }
             if (!Amount || Amount.trim() === '') {
                 return res.status(400).json({ smg: "Số lượng sản phẩm không được để trống" });
             }
-        
+
             if (isNaN(Price)) {
                 smg = "Giá phải là số"
                 return res.status(400).json({ smg: smg })
@@ -61,7 +84,7 @@ exports.ThemSanPham = async (req, res, next) => {
                 return res.status(400).json({ smg: smg })
             }
             // Validate the date using regex
-            
+
             let objProduct = new Product.Product;
             let objProductDetail = new ProductDetail.ProductDetail;
 
@@ -96,7 +119,7 @@ exports.ThemSanPham = async (req, res, next) => {
             await objProductDetail.save();
             smg = 'Thêm thành công, id mới = ' + objProduct._id
             return res.redirect('/apiAdmin/product');
-       //     return res.status(200).json({ smg: smg })
+            //     return res.status(200).json({ smg: smg })
         }
     } catch (error) {
         console.log(error.message);
@@ -126,15 +149,15 @@ exports.SuaSanPham = async (req, res, next) => {
 
 
             if (!NameProduct || NameProduct.trim() === '') {
-                smg= "Tên sản phẩm không được để trống"
+                smg = "Tên sản phẩm không được để trống"
                 return res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
             }
-        
+
             if (!Price || Price.trim() === '') {
-                smg= "Giá sản phẩm không được để trống" 
+                smg = "Giá sản phẩm không được để trống"
                 return res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
             }
-        
+
             if (!Size || Size.trim() === '') {
                 smg = "Kích thước sản phẩm không được để trống"
                 return res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
@@ -160,9 +183,9 @@ exports.SuaSanPham = async (req, res, next) => {
             }
 
             // Validate the date using regex
-            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+            const dateRegex = /^\d{4}\/\d{2}\/\d{2}$/;
             if (!dateRegex.test(Date)) {
-                smg = "Ngày không hợp lệ, định dạng phải là YYYY-MM-DD";
+                smg = "Ngày không hợp lệ, định dạng phải là YYYY/MM/DD";
                 return res.render('product/update-product', { smg: smg, obj: obj, objDT: objDT });
             }
 
@@ -374,7 +397,7 @@ exports.Xoaloai = async (req, res, next) => {
 exports.getHoaDonDangXuLy = async (req, res, next) => {
     console.log("lay du lieu thanh cong")
     try {
-        let list = await BillDetail.find({  Status: 0 }).sort({ Date: 1 }).select('ID IDUser IDBill Status Date Total Amount');
+        let list = await BillDetail.find({ Status: 0 }).sort({ Date: 1 }).select('ID IDUser IDBill Status Date Total Amount');
         // Lấy danh sách các ID của người dùng từ các hóa đơn
         let userIds = list.map(bill => bill.IDUser);
 
@@ -405,7 +428,7 @@ exports.getHoaDonDangXuLy = async (req, res, next) => {
 exports.getHoaDonDuyet = async (req, res, next) => {
     console.log("lay du lieu thanh cong")
     try {
-        let list = await BillDetail.find({  Status: 1 }).sort({ Date: 1 }).select('ID IDUser IDBill Status Date Total Amount');
+        let list = await BillDetail.find({ Status: 1 }).sort({ Date: 1 }).select('ID IDUser IDBill Status Date Total Amount');
         // Lấy danh sách các ID của người dùng từ các hóa đơn
         let userIds = list.map(bill => bill.IDUser);
 
@@ -434,7 +457,7 @@ exports.getHoaDonDuyet = async (req, res, next) => {
 exports.getHoaDonTuChoi = async (req, res, next) => {
     console.log("lay du lieu thanh cong")
     try {
-        let list = await BillDetail.find({  Status: 2 }).sort({ Date: 1 }).select('ID IDUser IDBill Status Date Total Amount');
+        let list = await BillDetail.find({ Status: 2 }).sort({ Date: 1 }).select('ID IDUser IDBill Status Date Total Amount');
         // Lấy danh sách các ID của người dùng từ các hóa đơn
         let userIds = list.map(bill => bill.IDUser);
 
@@ -578,3 +601,26 @@ exports.rejectRecharge = async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 };
+
+exports.DanhSachBillDetailToMonth = async (req, res, next) => {
+    console.log(req.body)
+    try {
+        let total = await BillDetail
+            .aggregate([{
+                $match: {
+                    Date: { $gte: req.body.firt, $lte: req.body.end }, Status: 1
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalQuantity: { $sum: "$Total" }
+                }
+            }
+            ])
+        return res.status(200).json(total[0].totalQuantity);
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send(error)
+    }
+}

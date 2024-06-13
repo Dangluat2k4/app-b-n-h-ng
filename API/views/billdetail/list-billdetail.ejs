@@ -10,52 +10,128 @@
 
 <body>
     <%- include('../inc/header') %>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <a href="/apiAdmin/billDangXuLy">
-                    <button type="submit" class="btn btn-success" style="margin-right: 10px;"> Đang chờ </button>
-                </a>
-                <a href="/apiAdmin/billDaDuyet">
-                    <button type="submit" class="btn btn-success" style="margin-left: 10px;"> Đã duyệt </button>
-                </a>
-                <a href="/apiAdmin/billTuChoi">
-                    <button type="submit" class="btn btn-success" style="margin-left: 10px;"> Từ chối </button>
-                </a>
+        <div class="showThongKe" style="margin: 20px; position: fixed; z-index: 99;"><img
+                src="http://localhost:3000/uploads/graph.png" style="width: 50px;" alt=""></div>
+        <div class="container">
+            <h2 style="text-align: center;margin: 10px; color: rgb(255, 153, 0);">Danh Sách Hóa Đơn </h2>
+            <div class="row">
+                <div class="col">
+                    <a href="/apiAdmin/billDangXuLy">
+                        <button type="submit" class="btn btn-warning" style="margin-right: 10px;"> Đang chờ </button>
+                    </a>
+                    <a href="/apiAdmin/billDaDuyet">
+                        <button type="submit" class="btn btn-warning" style="margin-left: 10px;"> Đã duyệt </button>
+                    </a>
+                    <a href="/apiAdmin/billTuChoi">
+                        <button type="submit" class="btn btn-warning" style="margin-left: 10px;"> Từ chối </button>
+                    </a>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">User</th>
-                            <th scope="col">IDBill</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Total</th>
-                            <th scope="col">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% listBill.forEach((bill) => { %>
-                        <tr>
-                            <td><%= bill._id %></td>
-                            <td><%= bill.FullName %></td>
-                            <td><%= bill.IDBill %></td>
-                            <td><%= bill.Status %></td>
-                            <td><%= bill.Date %></td>
-                            <td><%= bill.Total %></td>
-                            <td><%= bill.Amount %></td>
-                        </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
+            <div class="row">
+                <div class="col">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">User</th>
+                                <th scope="col">IDBill</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% listBill.forEach((bill)=> { %>
+                                <tr>
+                                    <td>
+                                        <%= bill._id %>
+                                    </td>
+                                    <td>
+                                        <%= bill.FullName %>
+                                    </td>
+                                    <td>
+                                        <%= bill.IDBill %>
+                                    </td>
+                                    <td>
+                                        <%= bill.Status %>
+                                    </td>
+                                    <td>
+                                        <%= bill.Date %>
+                                    </td>
+                                    <td>
+                                        <%= bill.Total %>
+                                    </td>
+                                    <td>
+                                        <%= bill.Amount %>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+            <dialog class="thongkeok" style="width: 50%; border: none;">
+                <img class="thoat" src="https://cdn.pixabay.com/photo/2017/11/07/07/06/x-2925826_1280.png"
+                    style="width: 50px;" alt="">
+                <H2 style="text-align: center;color: rgb(255, 157, 0);">Thống kê doanh thu</H2>
+                <form action="" method="get"
+                    style="display: grid; grid-template-columns: 25% 60% ; justify-content: space-evenly; width: 50%; margin-left: auto;margin-right: auto;">
+                    <label for="From" class="col-form-label">From: </label> <input id="fromDate" class="form-control"
+                        type="date" placeholder="" aria-label="default input example" style="margin-right: 10px;">
+                    <label for="To" class="col-form-label">To: </label> <input id="toDate" class="form-control"
+                        type="date" placeholder="Default input" aria-label="default input example">
+                    <button id="btnThongKe" type="button" class="btn btn-warning mb-3 ">Check</button>
+                    <input type="text" readonly  class="form-control-plaintext" style="text-align: center;" id="tong" value="Total: 0 VND ">
+                </form>
+            </dialog>
         </div>
-    </div>
-    <%- include('../inc/footer') %>
+        <%- include('../inc/footer') %>
+            <script>
+                var showThongKe = document.querySelector(".showThongKe")
+                var thoat = document.querySelector(".thoat")
+                var thongke = document.querySelector(".thongkeok")
+                var fromDate = document.querySelector("#fromDate")
+                var toDate = document.querySelector("#toDate")
+                var totalValue = document.querySelector("#tong")
+                var btnThongKe = document.querySelector("#btnThongKe")
+               
+
+                
+                showThongKe.addEventListener("click", () => {
+                    thongke.showModal()
+                    check = 1
+                })
+                thoat.addEventListener("click", () => {
+                    thongke.close()
+                })
+
+                btnThongKe.addEventListener("click", () => {
+                    const link = "/apiadmin/total/bill"
+                    fetch(link, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "firt":changeDateFomat(fromDate.value),
+                            "end": changeDateFomat(toDate.value)
+                        })
+                    }).then(res => res.json())
+                        .then(res => {
+                           if(isNaN(res)){
+                            totalValue.value = `Total: ${0} VND  `
+                           }else{
+                           totalValue.value = `Total: ${res} VND `
+                           }
+                        })
+                })
+
+                function changeDateFomat(olddate){
+                    var [yyyy, mm, dd] = olddate.split('-'); 
+                    return `${yyyy}/${mm}/${dd}`;
+                }
+            </script>
 </body>
 
 </html>

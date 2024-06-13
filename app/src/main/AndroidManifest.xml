@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -22,7 +24,7 @@
             android:name=".ShowDetailProduct"
             android:exported="false" />
         <activity
-            android:name=".DangNhap"
+            android:name=".ManHinhNhanVien"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +33,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ManHinhNhanVien"
+            android:name=".DangNhap"
             android:exported="true">
 
         </activity>
